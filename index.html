@@ -21,7 +21,7 @@
     --muted:#5a6a85; --accent:#2563eb; --border:#d4ddea;
   }
   *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
-  body{background:var(--bg);color:var(--text);min-height:100vh;padding:14px;transition:.25s;overflow-x:hidden;padding-bottom:80px}
+  body{background:var(--bg);color:var(--text);min-height:100vh;padding:14px;transition:.25s;overflow-x:hidden;padding-bottom:120px}
   .wrap{max-width:1200px;margin:0 auto}
 
   #loginGate{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;
@@ -78,11 +78,6 @@
   .panel h2 span{font-size:.75rem;text-transform:none;letter-spacing:0;color:var(--muted)}
 
   video, canvas.preview{width:100%;border-radius:12px;background:#000;display:block;max-height:340px;object-fit:cover}
-  .live-preview{position:relative}
-  .live-preview .rec-dot{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.6);
-    padding:5px 12px;border-radius:20px;font-size:.75rem;display:flex;align-items:center;gap:6px}
-  .live-preview .rec-dot i{width:8px;height:8px;background:var(--red);border-radius:50%;
-    animation:pulse 1s infinite;display:inline-block}
   .btn-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
   .btn{flex:1;min-width:100px;border:none;padding:12px;border-radius:12px;
     font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;background:var(--accent);color:#fff}
@@ -122,16 +117,52 @@
   .toast.green{border-color:var(--green)}
   .toast.red{border-color:var(--red)}
 
-  #installBtn{display:none;position:fixed;bottom:20px;right:20px;
-    background:var(--accent);color:#fff;border:none;padding:14px 22px;border-radius:50px;
-    font-size:.9rem;font-weight:600;cursor:pointer;box-shadow:0 10px 30px -6px #4f8cff;
-    z-index:9996}
+  /* INSTALL BAR — always visible at bottom */
+  #installBar{
+    position:fixed;bottom:0;left:0;right:0;
+    background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+    border-top:2px solid var(--accent);
+    padding:12px 16px;z-index:9995;
+    display:flex;align-items:center;gap:12px;
+    box-shadow:0 -8px 24px -8px #000;
+  }
+  #installBar .ib-icon{font-size:1.6rem}
+  #installBar .ib-text{flex:1;font-size:.85rem;line-height:1.3}
+  #installBar .ib-text b{display:block;color:var(--text);font-size:.95rem;margin-bottom:2px}
+  #installBar .ib-text span{color:var(--muted);font-size:.75rem}
+  #installBar .ib-btn{
+    background:var(--accent);color:#fff;border:none;padding:10px 18px;
+    border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;
+  }
+  #installBar .ib-close{
+    background:none;border:none;color:var(--muted);font-size:1.2rem;
+    cursor:pointer;padding:4px 8px;
+  }
+
+  /* MODAL for instructions */
+  .modal-back{
+    position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9997;
+    display:none;align-items:center;justify-content:center;padding:20px;
+  }
+  .modal-back.show{display:flex}
+  .modal{
+    background:var(--panel);border:1px solid var(--border);border-radius:20px;
+    padding:24px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;
+  }
+  .modal h3{font-size:1.15rem;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .modal ol{margin-left:20px;color:var(--text);font-size:.9rem;line-height:1.9}
+  .modal ol li{margin-bottom:4px}
+  .modal .modal-btn{
+    width:100%;margin-top:16px;background:var(--accent);color:#fff;border:none;
+    padding:12px;border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;
+  }
 
   @media(max-width:600px){
     .grid{grid-template-columns:repeat(2,1fr)}
     .feature{padding:14px 8px}
     .feature .ico{font-size:1.5rem}
     .feature .name{font-size:.78rem}
+    #installBar .ib-text span{display:none}
   }
 </style>
 </head>
@@ -166,64 +197,24 @@
   </div>
 
   <div class="grid" id="featureGrid">
-    <div class="feature" data-feature="camera">
-      <span class="ico">📷</span><div class="name">Camera</div><div class="sub">Rear + selfie</div>
-    </div>
-    <div class="feature" data-feature="burst">
-      <span class="ico">📸</span><div class="name">Photo Burst</div><div class="sub">5 shots / 10s</div>
-    </div>
-    <div class="feature" data-feature="mic">
-      <span class="ico">🎤</span><div class="name">Mic Record</div><div class="sub">Audio capture</div>
-      <span class="badge">REC</span>
-    </div>
-    <div class="feature" data-feature="video">
-      <span class="ico">🎥</span><div class="name">Video Record</div><div class="sub">Cam + mic</div>
-      <span class="badge">REC</span>
-    </div>
-    <div class="feature" data-feature="timelapse">
-      <span class="ico">⏱️</span><div class="name">Timelapse</div><div class="sub">1 photo / 5s</div>
-      <span class="badge">LIVE</span>
-    </div>
-    <div class="feature" data-feature="keylog">
-      <span class="ico">⌨️</span><div class="name">Keystroke Log</div><div class="sub">In-app only</div>
-    </div>
-    <div class="feature" data-feature="location">
-      <span class="ico">📍</span><div class="name">GPS Location</div><div class="sub">One-shot</div>
-    </div>
-    <div class="feature" data-feature="track">
-      <span class="ico">🛰️</span><div class="name">Live Tracking</div><div class="sub">Continuous GPS</div>
-      <span class="badge">LIVE</span>
-    </div>
-    <div class="feature" data-feature="clipboard">
-      <span class="ico">📋</span><div class="name">Clipboard</div><div class="sub">Read / write</div>
-    </div>
-    <div class="feature" data-feature="battery">
-      <span class="ico">🔋</span><div class="name">Battery</div><div class="sub">Status + level</div>
-    </div>
-    <div class="feature" data-feature="device">
-      <span class="ico">📱</span><div class="name">Device Info</div><div class="sub">Hardware + UA</div>
-    </div>
-    <div class="feature" data-feature="network">
-      <span class="ico">🌐</span><div class="name">Network</div><div class="sub">IP + speed</div>
-    </div>
-    <div class="feature" data-feature="screen">
-      <span class="ico">🖥️</span><div class="name">Screen Share</div><div class="sub">Desktop only</div>
-    </div>
-    <div class="feature" data-feature="audio">
-      <span class="ico">🔊</span><div class="name">Play Audio</div><div class="sub">Remote sound</div>
-    </div>
-    <div class="feature" data-feature="notify">
-      <span class="ico">🔔</span><div class="name">Notify</div><div class="sub">Push message</div>
-    </div>
-    <div class="feature" data-feature="vibrate">
-      <span class="ico">📳</span><div class="name">Vibrate</div><div class="sub">Pattern buzz</div>
-    </div>
-    <div class="feature" data-feature="flash">
-      <span class="ico">🔦</span><div class="name">Flashlight</div><div class="sub">Torch on/off</div>
-    </div>
-    <div class="feature" data-feature="scream">
-      <span class="ico">🚨</span><div class="name">Scream Screen</div><div class="sub">Bright + sound</div>
-    </div>
+    <div class="feature" data-feature="camera"><span class="ico">📷</span><div class="name">Camera</div><div class="sub">Rear + selfie</div></div>
+    <div class="feature" data-feature="burst"><span class="ico">📸</span><div class="name">Photo Burst</div><div class="sub">5 shots / 10s</div></div>
+    <div class="feature" data-feature="mic"><span class="ico">🎤</span><div class="name">Mic Record</div><div class="sub">Audio capture</div><span class="badge">REC</span></div>
+    <div class="feature" data-feature="video"><span class="ico">🎥</span><div class="name">Video Record</div><div class="sub">Cam + mic</div><span class="badge">REC</span></div>
+    <div class="feature" data-feature="timelapse"><span class="ico">⏱️</span><div class="name">Timelapse</div><div class="sub">1 photo / 5s</div><span class="badge">LIVE</span></div>
+    <div class="feature" data-feature="keylog"><span class="ico">⌨️</span><div class="name">Keystroke Log</div><div class="sub">In-app only</div></div>
+    <div class="feature" data-feature="location"><span class="ico">📍</span><div class="name">GPS Location</div><div class="sub">One-shot</div></div>
+    <div class="feature" data-feature="track"><span class="ico">🛰️</span><div class="name">Live Tracking</div><div class="sub">Continuous GPS</div><span class="badge">LIVE</span></div>
+    <div class="feature" data-feature="clipboard"><span class="ico">📋</span><div class="name">Clipboard</div><div class="sub">Read / write</div></div>
+    <div class="feature" data-feature="battery"><span class="ico">🔋</span><div class="name">Battery</div><div class="sub">Status + level</div></div>
+    <div class="feature" data-feature="device"><span class="ico">📱</span><div class="name">Device Info</div><div class="sub">Hardware + UA</div></div>
+    <div class="feature" data-feature="network"><span class="ico">🌐</span><div class="name">Network</div><div class="sub">IP + speed</div></div>
+    <div class="feature" data-feature="screen"><span class="ico">🖥️</span><div class="name">Screen Share</div><div class="sub">Desktop only</div></div>
+    <div class="feature" data-feature="audio"><span class="ico">🔊</span><div class="name">Play Audio</div><div class="sub">Remote sound</div></div>
+    <div class="feature" data-feature="notify"><span class="ico">🔔</span><div class="name">Notify</div><div class="sub">Push message</div></div>
+    <div class="feature" data-feature="vibrate"><span class="ico">📳</span><div class="name">Vibrate</div><div class="sub">Pattern buzz</div></div>
+    <div class="feature" data-feature="flash"><span class="ico">🔦</span><div class="name">Flashlight</div><div class="sub">Torch on/off</div></div>
+    <div class="feature" data-feature="scream"><span class="ico">🚨</span><div class="name">Scream Screen</div><div class="sub">Bright + sound</div></div>
   </div>
 
   <div class="panel" id="activePanel" style="display:none">
@@ -277,12 +268,31 @@
 
 </div>
 
+<!-- INSTALL BAR — always visible -->
+<div id="installBar">
+  <div class="ib-icon">📲</div>
+  <div class="ib-text">
+    <b>Install Admin Console</b>
+    <span>Tap to add to your home screen</span>
+  </div>
+  <button class="ib-btn" onclick="handleInstall()">Install</button>
+  <button class="ib-close" onclick="dismissInstallBar()">✕</button>
+</div>
+
+<!-- INSTRUCTIONS MODAL -->
+<div class="modal-back" id="installModal">
+  <div class="modal">
+    <h3>📲 Install the app</h3>
+    <div id="installSteps"></div>
+    <button class="modal-btn" onclick="closeInstallModal()">Got it</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
-<button id="installBtn">📲 Install App</button>
 
 <script>
 /* ============================================================
-   ADMIN CONSOLE — mobile-safe build
+   ADMIN CONSOLE
    ============================================================ */
 
 const ADMIN_PASSWORD = "admin123";  // ← change this!
@@ -301,7 +311,8 @@ const S = {
   syncUrl: localStorage.getItem('ac_syncUrl') || '',
   trackingId: null,
   timelapseId: null,
-  burstRunning: false
+  burstRunning: false,
+  currentFacing: 'environment'
 };
 
 const $ = id => document.getElementById(id);
@@ -314,11 +325,9 @@ function log(msg, type='info'){
   el.scrollTop = el.scrollHeight;
   $('logCount').textContent = el.children.length;
 }
-
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-
 function toast(msg, type=''){
   const t = $('toast');
   t.textContent = msg;
@@ -351,12 +360,7 @@ function attemptLogin(){
   }
 }
 $('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') attemptLogin(); });
-
-function lockApp(){
-  sessionStorage.removeItem('ac_auth');
-  location.reload();
-}
-
+function lockApp(){ sessionStorage.removeItem('ac_auth'); location.reload(); }
 if(sessionStorage.getItem('ac_auth')==='1'){
   S.unlocked = true;
   $('loginGate').style.display = 'none';
@@ -412,7 +416,6 @@ function dbClear(){
     req.onerror = ()=>rej(req.error);
   });
 }
-
 async function storeCapture(type, blob, meta={}){
   const dataUrl = await blobToDataUrl(blob);
   const item = { type, ts: Date.now(), meta, dataUrl, synced: false };
@@ -423,7 +426,6 @@ async function storeCapture(type, blob, meta={}){
   log(`Stored ${type} (${(blob.size/1024).toFixed(1)} KB)`);
   return item;
 }
-
 function blobToDataUrl(blob){
   return new Promise(res=>{
     const r = new FileReader();
@@ -431,7 +433,6 @@ function blobToDataUrl(blob){
     r.readAsDataURL(blob);
   });
 }
-
 async function updateStorageCount(){
   const all = await dbAll();
   $('storageCount').textContent = all.length;
@@ -488,30 +489,18 @@ function stopAllStreams(){
   document.querySelectorAll('.feature.recording').forEach(f=>f.classList.remove('recording'));
   setCamStatus(false); setMicStatus(false);
 }
+function setCamStatus(on){ $('camStatus').textContent = on ? 'active' : 'off'; $('ledCam').className = 'led ' + (on?'on':''); }
+function setMicStatus(on){ $('micStatus').textContent = on ? 'active' : 'off'; $('ledMic').className = 'led ' + (on?'rec':''); }
+function setSyncStatus(txt, cls=''){ $('syncStatus').textContent = txt; $('ledSync').className = 'led ' + cls; }
 
-function setCamStatus(on){
-  $('camStatus').textContent = on ? 'active' : 'off';
-  $('ledCam').className = 'led ' + (on?'on':'');
-}
-function setMicStatus(on){
-  $('micStatus').textContent = on ? 'active' : 'off';
-  $('ledMic').className = 'led ' + (on?'rec':'');
-}
-function setSyncStatus(txt, cls=''){
-  $('syncStatus').textContent = txt;
-  $('ledSync').className = 'led ' + cls;
-}
-
-/* ============================================================
-   CAMERA (merged selfie + rear)
-   ============================================================ */
+/* ---------- CAMERA ---------- */
 async function renderCameraPanel(){
   $('panelTitle').innerHTML = '📷 Camera <span>Front + rear</span>';
   $('panelBody').innerHTML = `
     <video id="camPreview" autoplay playsinline muted></video>
     <div class="btn-row">
-      <button class="btn" id="camFront">🤳 Front Cam</button>
-      <button class="btn" id="camRear">📷 Rear Cam</button>
+      <button class="btn" id="camFront">🤳 Front</button>
+      <button class="btn" id="camRear">📷 Rear</button>
       <button class="btn green" id="camSnap" disabled>📸 Capture</button>
       <button class="btn red" id="camStop" disabled>⏹ Stop</button>
     </div>
@@ -522,7 +511,6 @@ async function renderCameraPanel(){
   $('camSnap').onclick = ()=>snapPhoto();
   $('camStop').onclick = ()=>{ stopAllStreams(); toast('Camera stopped'); };
 }
-
 async function startCamera(facing){
   try{
     if(S.streams.cam){ S.streams.cam.getTracks().forEach(t=>t.stop()); }
@@ -536,12 +524,8 @@ async function startCamera(facing){
     $('camSnap').disabled = false;
     $('camStop').disabled = false;
     log(`Camera started (${facing})`);
-  }catch(e){
-    log('Camera failed: '+e.message,'error');
-    toast('Camera denied — allow permission', 'red');
-  }
+  }catch(e){ log('Camera failed: '+e.message,'error'); toast('Camera denied','red'); }
 }
-
 async function snapPhoto(){
   const video = $('camPreview');
   if(!video.videoWidth){ toast('Camera not ready','red'); return; }
@@ -556,7 +540,6 @@ async function snapPhoto(){
     toast('Photo captured ✓','green');
   }, 'image/jpeg', 0.92);
 }
-
 function flashScreen(){
   const f = document.createElement('div');
   f.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:9997;opacity:.85;transition:.35s;pointer-events:none';
@@ -564,9 +547,7 @@ function flashScreen(){
   setTimeout(()=>{f.style.opacity='0'; setTimeout(()=>f.remove(),350)},50);
 }
 
-/* ============================================================
-   PHOTO BURST — 5 photos over 10 seconds
-   ============================================================ */
+/* ---------- PHOTO BURST ---------- */
 async function renderBurstPanel(){
   $('panelTitle').innerHTML = '📸 Photo Burst <span>5 photos / 10s</span>';
   $('panelBody').innerHTML = `
@@ -583,12 +564,11 @@ async function renderBurstPanel(){
       S.streams.cam = stream;
       $('burstPreview').srcObject = stream;
       setCamStatus(true);
-      await new Promise(r=>setTimeout(r,800)); // warm up
+      await new Promise(r=>setTimeout(r,800));
       S.burstRunning = true;
       $('burstGo').disabled = true;
       $('burstStop').disabled = false;
       $('burstOut').innerHTML = '';
-      log('Burst started');
       for(let i=0; i<5 && S.burstRunning; i++){
         await new Promise(r=>setTimeout(r,2000));
         const v = $('burstPreview');
@@ -606,16 +586,10 @@ async function renderBurstPanel(){
       toast('Burst complete ✓','green');
     }catch(e){ log('Burst failed: '+e.message,'error'); toast('Camera denied','red'); }
   };
-  $('burstStop').onclick = ()=>{
-    S.burstRunning = false;
-    $('burstGo').disabled = false;
-    $('burstStop').disabled = true;
-  };
+  $('burstStop').onclick = ()=>{ S.burstRunning = false; $('burstGo').disabled = false; $('burstStop').disabled = true; };
 }
 
-/* ============================================================
-   MIC RECORD
-   ============================================================ */
+/* ---------- MIC ---------- */
 async function renderMicPanel(){
   $('panelTitle').innerHTML = '🎤 Mic Record <span>Audio capture</span>';
   $('panelBody').innerHTML = `
@@ -638,7 +612,6 @@ async function renderMicPanel(){
   $('micStop').onclick = ()=>stopRecorder('mic');
   $('micPlay').onclick = ()=>{ const a=$('micAudio'); a.style.display='block'; a.play(); };
 }
-
 async function startMicRecord(){
   try{
     const stream = await navigator.mediaDevices.getUserMedia({audio:true});
@@ -656,7 +629,6 @@ async function startMicRecord(){
       $('micPlay').disabled = false;
       setMicStatus(false);
       stream.getTracks().forEach(t=>t.stop());
-      log('Mic recording saved');
       toast('Audio saved ✓','green');
     };
     const duration = Math.max(1, +$('micDuration').value || 10);
@@ -667,7 +639,6 @@ async function startMicRecord(){
     setTimeout(()=>{ if(S.recorders.mic && S.recorders.mic.state==='recording') stopRecorder('mic'); }, duration*1000);
   }catch(e){ log('Mic failed: '+e.message,'error'); toast('Mic denied','red'); }
 }
-
 function stopRecorder(name){
   const rec = S.recorders[name];
   if(rec && rec.state !== 'inactive'){ rec.stop(); }
@@ -678,15 +649,13 @@ function stopRecorder(name){
   }
 }
 
-/* ============================================================
-   VIDEO RECORD
-   ============================================================ */
+/* ---------- VIDEO ---------- */
 async function renderVideoPanel(){
   $('panelTitle').innerHTML = '🎥 Video Record <span>Cam + mic</span>';
   $('panelBody').innerHTML = `
     <video id="vidPreview" autoplay playsinline muted></video>
     <div class="btn-row">
-      <button class="btn" id="vidStart">▶ Enable Camera</button>
+      <button class="btn" id="vidStart">▶ Enable</button>
       <button class="btn green" id="vidRec" disabled>⏺ Record</button>
       <button class="btn red" id="vidStop" disabled>⏹ Stop</button>
     </div>
@@ -699,7 +668,6 @@ async function renderVideoPanel(){
       setCamStatus(true); setMicStatus(true);
       $('vidPreview').srcObject = stream;
       $('vidRec').disabled = false;
-      log('Video ready');
     }catch(e){ log('Video setup failed: '+e.message,'error'); toast('Permission denied','red'); }
   };
   $('vidRec').onclick = ()=>{
@@ -719,24 +687,17 @@ async function renderVideoPanel(){
     rec.start();
     $('vidRec').disabled = true;
     $('vidStop').disabled = false;
-    log('Video recording started');
   };
-  $('vidStop').onclick = ()=>{
-    stopRecorder('video');
-    $('vidRec').disabled = false;
-    $('vidStop').disabled = true;
-  };
+  $('vidStop').onclick = ()=>{ stopRecorder('video'); $('vidRec').disabled = false; $('vidStop').disabled = true; };
 }
 
-/* ============================================================
-   TIMELAPSE — 1 photo every 5s
-   ============================================================ */
+/* ---------- TIMELAPSE ---------- */
 async function renderTimelapsePanel(){
   $('panelTitle').innerHTML = '⏱️ Timelapse <span>1 photo / 5s</span>';
   $('panelBody').innerHTML = `
     <video id="tlPreview" autoplay playsinline muted></video>
     <div class="btn-row">
-      <button class="btn green" id="tlStart">▶ Start Timelapse</button>
+      <button class="btn green" id="tlStart">▶ Start</button>
       <button class="btn red" id="tlStop" disabled>⏹ Stop</button>
     </div>
     <div id="tlStatus" style="font-size:.85rem;color:var(--muted);margin-top:10px"></div>
@@ -754,7 +715,6 @@ async function renderTimelapsePanel(){
       $('tlStart').disabled = true;
       $('tlStop').disabled = false;
       $('tlOut').innerHTML = '';
-      log('Timelapse started');
       S.timelapseId = setInterval(async ()=>{
         const v = $('tlPreview');
         if(!v.videoWidth) return;
@@ -775,18 +735,15 @@ async function renderTimelapsePanel(){
     if(S.timelapseId){ clearInterval(S.timelapseId); S.timelapseId = null; }
     $('tlStart').disabled = false;
     $('tlStop').disabled = true;
-    log('Timelapse stopped');
   };
 }
 
-/* ============================================================
-   KEYLOG
-   ============================================================ */
+/* ---------- KEYLOG ---------- */
 async function renderKeylogPanel(){
   $('panelTitle').innerHTML = '⌨️ Keystroke Log <span>In-app input only</span>';
   $('panelBody').innerHTML = `
     <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
-      Logs every keystroke typed inside this web app. Browsers cannot log keystrokes in other apps — that's a security boundary.
+      Logs every keystroke typed inside this web app. Browsers cannot log keystrokes in other apps.
     </p>
     <div class="btn-row">
       <button class="btn green" id="klOn">▶ Enable</button>
@@ -797,7 +754,6 @@ async function renderKeylogPanel(){
   $('klOff').onclick = ()=>{ S.keylogEnabled = false; log('Keylog OFF','warn'); toast('Keylog OFF'); };
   if(S.keylogEnabled) $('keylogPanel').style.display = 'block';
 }
-
 document.addEventListener('keydown', e=>{
   if(!S.keylogEnabled) return;
   const field = e.target.id || e.target.name || e.target.tagName;
@@ -808,20 +764,13 @@ document.addEventListener('keydown', e=>{
   el.scrollTop = el.scrollHeight;
   $('keylogCount').textContent = S.keylogBuffer.length + ' events';
 });
-
 function downloadKeylog(){
   const txt = S.keylogBuffer.map(e=>`${new Date(e.ts).toISOString()}\t${e.field}\t${e.key}`).join('\n');
   downloadBlob(new Blob([txt], {type:'text/plain'}), `keylog_${Date.now()}.txt`);
 }
-function clearKeylog(){
-  S.keylogBuffer = [];
-  $('keylogLog').innerHTML = '';
-  $('keylogCount').textContent = '0 events';
-}
+function clearKeylog(){ S.keylogBuffer = []; $('keylogLog').innerHTML = ''; $('keylogCount').textContent = '0 events'; }
 
-/* ============================================================
-   GPS LOCATION
-   ============================================================ */
+/* ---------- GPS ---------- */
 async function renderLocationPanel(){
   $('panelTitle').innerHTML = '📍 GPS Location <span>One-shot</span>';
   $('panelBody').innerHTML = `
@@ -840,8 +789,7 @@ async function renderLocationPanel(){
       const blob = new Blob([JSON.stringify({lat,lng,accuracy,ts:Date.now()}, null, 2)], {type:'application/json'});
       await storeCapture('location', blob, {lat,lng,accuracy});
       toast('Location saved ✓','green');
-    }, err=>{ log('GPS failed: '+err.message,'error'); toast('Location denied','red'); },
-    {enableHighAccuracy:true});
+    }, err=>{ log('GPS failed: '+err.message,'error'); toast('Location denied','red'); }, {enableHighAccuracy:true});
   };
   $('locMap').onclick = ()=>{
     navigator.geolocation.getCurrentPosition(p=>{
@@ -850,9 +798,7 @@ async function renderLocationPanel(){
   };
 }
 
-/* ============================================================
-   LIVE TRACKING
-   ============================================================ */
+/* ---------- TRACKING ---------- */
 async function renderTrackPanel(){
   $('panelTitle').innerHTML = '🛰️ Live Tracking <span>Continuous GPS</span>';
   $('panelBody').innerHTML = `
@@ -886,15 +832,11 @@ async function renderTrackPanel(){
   };
 }
 
-/* ============================================================
-   CLIPBOARD
-   ============================================================ */
+/* ---------- CLIPBOARD ---------- */
 async function renderClipboardPanel(){
   $('panelTitle').innerHTML = '📋 Clipboard <span>Read / write</span>';
   $('panelBody').innerHTML = `
-    <div class="input-row">
-      <input id="clipText" placeholder="Text to copy" />
-    </div>
+    <div class="input-row"><input id="clipText" placeholder="Text to copy" /></div>
     <div class="btn-row">
       <button class="btn" id="clipWrite">📋 Copy</button>
       <button class="btn green" id="clipRead">📥 Read</button>
@@ -911,13 +853,11 @@ async function renderClipboardPanel(){
       $('clipOut').innerHTML = `<div class="log">${escapeHtml(text || '(empty)')}</div>`;
       const blob = new Blob([text], {type:'text/plain'});
       await storeCapture('clipboard', blob, {length: text.length});
-    }catch(e){ toast('Read denied','red'); log('Clipboard read failed: '+e.message,'error'); }
+    }catch(e){ toast('Read denied','red'); }
   };
 }
 
-/* ============================================================
-   BATTERY
-   ============================================================ */
+/* ---------- BATTERY ---------- */
 async function renderBatteryPanel(){
   $('panelTitle').innerHTML = '🔋 Battery <span>Status</span>';
   $('panelBody').innerHTML = `<div id="batOut">Reading…</div>`;
@@ -936,33 +876,28 @@ Discharging time: ${bat.dischargingTime === Infinity ? '—' : bat.dischargingTi
   bat.addEventListener('chargingchange', render);
 }
 
-/* ============================================================
-   DEVICE INFO
-   ============================================================ */
+/* ---------- DEVICE INFO ---------- */
 async function renderDevicePanel(){
   $('panelTitle').innerHTML = '📱 Device Info <span>Hardware + UA</span>';
   const info = {
     'User Agent': navigator.userAgent,
     'Platform': navigator.platform,
     'Language': navigator.language,
-    'Languages': (navigator.languages||[]).join(', '),
     'Cores': navigator.hardwareConcurrency || '—',
     'Memory (GB)': navigator.deviceMemory || '—',
     'Screen': `${screen.width}x${screen.height}`,
-    'Available': `${screen.availWidth}x${screen.availHeight}`,
     'Pixel Ratio': window.devicePixelRatio,
     'Color Depth': screen.colorDepth + ' bit',
     'Touch Points': navigator.maxTouchPoints || 0,
     'Online': navigator.onLine ? 'yes' : 'no',
     'Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
-    'Cookies': navigator.cookieEnabled ? 'yes' : 'no',
-    'Do Not Track': navigator.doNotTrack || '—'
+    'Cookies': navigator.cookieEnabled ? 'yes' : 'no'
   };
   $('panelBody').innerHTML = `<div class="log">${
     Object.entries(info).map(([k,v])=>`<div><b>${escapeHtml(k)}:</b> ${escapeHtml(String(v))}</div>`).join('')
   }</div>
   <div class="btn-row">
-    <button class="btn ghost" id="devCopy">📋 Copy JSON</button>
+    <button class="btn ghost" id="devCopy">📋 Copy</button>
     <button class="btn ghost" id="devStore">💾 Save</button>
   </div>`;
   $('devCopy').onclick = ()=>{ navigator.clipboard.writeText(JSON.stringify(info,null,2)); toast('Copied','green'); };
@@ -973,15 +908,11 @@ async function renderDevicePanel(){
   };
 }
 
-/* ============================================================
-   NETWORK
-   ============================================================ */
+/* ---------- NETWORK ---------- */
 async function renderNetworkPanel(){
   $('panelTitle').innerHTML = '🌐 Network <span>IP + speed</span>';
   $('panelBody').innerHTML = `
-    <div class="btn-row">
-      <button class="btn" id="netRun">🔍 Run Network Check</button>
-    </div>
+    <div class="btn-row"><button class="btn" id="netRun">🔍 Run Check</button></div>
     <div id="netOut" style="margin-top:14px"></div>
   `;
   $('netRun').onclick = async ()=>{
@@ -1009,7 +940,6 @@ Download: ${speed}
 Effective type: ${conn.effectiveType || '—'}
 Downlink: ${conn.downlink ? conn.downlink+' Mbps' : '—'}
 RTT: ${conn.rtt ? conn.rtt+' ms' : '—'}
-Save-Data: ${conn.saveData ? 'on' : 'off'}
 Online: ${navigator.onLine ? 'yes' : 'no'}`;
     out.innerHTML = `<div class="log">${escapeHtml(text)}</div>`;
     const blob = new Blob([text], {type:'text/plain'});
@@ -1017,30 +947,27 @@ Online: ${navigator.onLine ? 'yes' : 'no'}`;
   };
 }
 
-/* ============================================================
-   SCREEN SHARE (desktop only — shows notice on mobile)
-   ============================================================ */
+/* ---------- SCREEN ---------- */
 async function renderScreenPanel(){
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   $('panelTitle').innerHTML = '🖥️ Screen Share <span>Desktop only</span>';
   if(isMobile){
-    $('panelBody').innerHTML = `
-      <div class="log" style="border-left:3px solid var(--amber)">
+    $('panelBody').innerHTML = `<div class="log" style="border-left:3px solid var(--amber)">
 ⚠️ Screen capture is NOT supported on mobile browsers.
 
-This is a security feature of Android Chrome and iOS Safari —
-they don't allow websites to capture the entire screen.
+This is a security feature — Android Chrome and iOS Safari
+don't allow websites to capture the entire screen.
 
-✅ Use this feature on desktop Chrome or Firefox.
-      </div>`;
+✅ Use desktop Chrome or Firefox for this feature.
+    </div>`;
     return;
   }
   $('panelBody').innerHTML = `
     <video id="scrPreview" autoplay playsinline muted></video>
     <div class="btn-row">
-      <button class="btn" id="scrStart">🖥️ Start Screen Share</button>
-      <button class="btn green" id="scrSnap" disabled>📸 Snapshot</button>
-      <button class="btn red" id="scrRec" disabled>⏺ Record</button>
+      <button class="btn" id="scrStart">🖥️ Start</button>
+      <button class="btn green" id="scrSnap" disabled>📸 Snap</button>
+      <button class="btn red" id="scrRec" disabled>⏺ Rec</button>
       <button class="btn red" id="scrStop" disabled>⏹ Stop</button>
     </div>
   `;
@@ -1053,14 +980,14 @@ they don't allow websites to capture the entire screen.
       $('scrRec').disabled = false;
       $('scrStop').disabled = false;
       stream.getVideoTracks()[0].onended = ()=>stopAllStreams();
-    }catch(e){ toast('Screen share cancelled','red'); }
+    }catch(e){ toast('Cancelled','red'); }
   };
   $('scrSnap').onclick = async ()=>{
     const v = $('scrPreview');
     const c = document.createElement('canvas');
     c.width = v.videoWidth; c.height = v.videoHeight;
     c.getContext('2d').drawImage(v,0,0);
-    c.toBlob(async b=>{ await storeCapture('screen', b, {}); toast('Snapshot saved ✓','green'); }, 'image/png');
+    c.toBlob(async b=>{ await storeCapture('screen', b, {}); toast('Saved ✓','green'); }, 'image/png');
   };
   $('scrRec').onclick = ()=>{
     const stream = S.streams.screen;
@@ -1080,9 +1007,7 @@ they don't allow websites to capture the entire screen.
   $('scrStop').onclick = ()=>{ stopRecorder('screen'); $('scrRec').disabled = false; $('scrStop').disabled = true; };
 }
 
-/* ============================================================
-   PLAY AUDIO
-   ============================================================ */
+/* ---------- AUDIO ---------- */
 async function renderAudioPanel(){
   $('panelTitle').innerHTML = '🔊 Play Audio <span>Emit sound</span>';
   $('panelBody').innerHTML = `
@@ -1134,9 +1059,7 @@ async function renderAudioPanel(){
   };
 }
 
-/* ============================================================
-   NOTIFY
-   ============================================================ */
+/* ---------- NOTIFY ---------- */
 async function renderNotifyPanel(){
   $('panelTitle').innerHTML = '🔔 Notify <span>Push message</span>';
   $('panelBody').innerHTML = `
@@ -1166,15 +1089,11 @@ async function renderNotifyPanel(){
   };
 }
 
-/* ============================================================
-   VIBRATE
-   ============================================================ */
+/* ---------- VIBRATE ---------- */
 async function renderVibratePanel(){
   $('panelTitle').innerHTML = '📳 Vibrate <span>Device buzz</span>';
   $('panelBody').innerHTML = `
-    <div class="input-row">
-      <input id="vbPattern" value="200,100,200,100,400" />
-    </div>
+    <div class="input-row"><input id="vbPattern" value="200,100,200,100,400" /></div>
     <div class="btn-row">
       <button class="btn" id="vbGo">📳 Vibrate</button>
       <button class="btn ghost" id="vbLong">Long Buzz</button>
@@ -1189,9 +1108,7 @@ async function renderVibratePanel(){
   $('vbLong').onclick = ()=>{ if(navigator.vibrate) navigator.vibrate(1500); };
 }
 
-/* ============================================================
-   FLASHLIGHT
-   ============================================================ */
+/* ---------- FLASHLIGHT ---------- */
 async function renderFlashPanel(){
   $('panelTitle').innerHTML = '🔦 Flashlight <span>Torch on/off</span>';
   $('panelBody').innerHTML = `
@@ -1219,18 +1136,14 @@ async function renderFlashPanel(){
   };
 }
 
-/* ============================================================
-   SCREAM SCREEN — bright white + loud alarm
-   ============================================================ */
+/* ---------- SCREAM ---------- */
 async function renderScreamPanel(){
   $('panelTitle').innerHTML = '🚨 Scream Screen <span>Bright + sound</span>';
   $('panelBody').innerHTML = `
     <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
-      Flashes the screen bright white and plays a loud alarm. Useful for lost-phone situations.
+      Flashes bright white and plays a loud alarm. Useful for lost-phone.
     </p>
-    <div class="btn-row">
-      <button class="btn red" id="scGo">🚨 SCREAM (10s)</button>
-    </div>
+    <div class="btn-row"><button class="btn red" id="scGo">🚨 SCREAM (10s)</button></div>
   `;
   $('scGo').onclick = ()=>{
     let flashes = 0;
@@ -1256,9 +1169,7 @@ async function renderScreamPanel(){
   };
 }
 
-/* ============================================================
-   MEDIA LIBRARY
-   ============================================================ */
+/* ---------- MEDIA LIBRARY ---------- */
 async function refreshMediaLibrary(){
   const all = await dbAll();
   const grid = $('mediaGrid');
@@ -1269,11 +1180,10 @@ async function refreshMediaLibrary(){
   grid.innerHTML = all.slice().reverse().map(item=>{
     let preview = '';
     if(item.dataUrl){
-      if(item.type==='audio' || item.type==='location' || item.type==='track'
-        || item.type==='device' || item.type==='network' || item.type==='clipboard'){
+      if(['audio','location','track','device','network','clipboard'].includes(item.type)){
         const icon = {audio:'🎵',location:'📍',track:'🛰️',device:'📱',network:'🌐',clipboard:'📋'}[item.type] || '📄';
         preview = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:2rem">${icon}</div>`;
-      } else if(item.type==='video' || item.type==='screenrec' || item.type==='fullrec'){
+      } else if(item.type==='video' || item.type==='screenrec'){
         preview = `<video src="${item.dataUrl}" muted></video>`;
       } else {
         preview = `<img src="${item.dataUrl}" />`;
@@ -1288,7 +1198,6 @@ async function refreshMediaLibrary(){
       </div>`;
   }).join('');
 }
-
 async function delMedia(id){
   if(!confirm('Delete this item?')) return;
   await dbDelete(id);
@@ -1307,7 +1216,7 @@ async function openMedia(id){
   const w = window.open('', '_blank');
   if(item.type==='audio'){
     w.document.write(`<title>${item.type}</title><audio controls autoplay src="${item.dataUrl}" style="width:90%;margin:20px"></audio>`);
-  } else if(item.type==='video' || item.type==='screenrec' || item.type==='fullrec'){
+  } else if(item.type==='video' || item.type==='screenrec'){
     w.document.write(`<title>${item.type}</title><video controls autoplay src="${item.dataUrl}" style="max-width:100%"></video>`);
   } else if(item.dataUrl && item.dataUrl.startsWith('data:image')){
     w.document.write(`<title>${item.type}</title><img src="${item.dataUrl}" style="max-width:100%">`);
@@ -1317,9 +1226,7 @@ async function openMedia(id){
   }
 }
 
-/* ============================================================
-   EXPORT / DOWNLOAD
-   ============================================================ */
+/* ---------- EXPORT ---------- */
 function downloadBlob(blob, filename){
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1350,9 +1257,7 @@ async function downloadAllMedia(){
   }
 }
 
-/* ============================================================
-   REMOTE SYNC
-   ============================================================ */
+/* ---------- SYNC ---------- */
 function saveSyncUrl(){
   S.syncUrl = $('syncUrl').value.trim();
   localStorage.setItem('ac_syncUrl', S.syncUrl);
@@ -1367,8 +1272,7 @@ async function syncPending(){
   for(const item of pending){
     try{
       const res = await fetch(S.syncUrl, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+        method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({type:item.type, ts:item.ts, meta:item.meta, dataUrl:item.dataUrl})
       });
       if(res.ok){ item.synced = true; ok++; } else fail++;
@@ -1387,32 +1291,100 @@ async function testSync(){
 }
 
 /* ============================================================
-   PWA INSTALL
+   PWA INSTALL — ALWAYS-VISIBLE BAR
    ============================================================ */
 let deferredPrompt = null;
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  $('installBtn').style.display = 'block';
+  log('Install prompt available');
 });
-$('installBtn').addEventListener('click', async () => {
-  if(!deferredPrompt){
-    toast('Use browser menu → "Add to Home Screen"', 'red');
+
+async function handleInstall(){
+  // Case 1: native prompt available
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    toast(outcome === 'accepted' ? 'Installing…' : 'Cancelled', outcome === 'accepted' ? 'green' : '');
+    deferredPrompt = null;
+    if(outcome === 'accepted') dismissInstallBar();
     return;
   }
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  toast(outcome === 'accepted' ? 'Installed ✓' : 'Cancelled', outcome === 'accepted' ? 'green' : '');
-  deferredPrompt = null;
-  $('installBtn').style.display = 'none';
-});
-if(window.matchMedia('(display-mode: standalone)').matches){
-  $('installBtn').style.display = 'none';
+
+  // Case 2: already installed
+  if(window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true){
+    toast('Already installed ✓','green');
+    dismissInstallBar();
+    return;
+  }
+
+  // Case 3: show manual instructions
+  showInstallInstructions();
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
+function showInstallInstructions(){
+  const ua = navigator.userAgent;
+  const steps = $('installSteps');
+  let html = '';
+
+  if(/Android/i.test(ua)){
+    html = `
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
+        On Android, open this site in <b>Chrome</b> (not Facebook/WhatsApp browser).
+      </p>
+      <ol>
+        <li>Tap the <b>⋮</b> menu at the top-right</li>
+        <li>Tap <b>"Install app"</b> or <b>"Add to Home screen"</b></li>
+        <li>Confirm by tapping <b>Install</b> / <b>Add</b></li>
+        <li>The icon appears on your home screen 🎉</li>
+      </ol>
+    `;
+  } else if(/iPhone|iPad|iPod/i.test(ua)){
+    html = `
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
+        On iPhone/iPad, you must use <b>Safari</b> (not Chrome).
+      </p>
+      <ol>
+        <li>Tap the <b>Share</b> button (□ with ↑)</li>
+        <li>Scroll down and tap <b>"Add to Home Screen"</b></li>
+        <li>Tap <b>Add</b> in the top-right</li>
+        <li>The icon appears on your home screen 🎉</li>
+      </ol>
+    `;
+  } else {
+    html = `
+      <ol>
+        <li>Open your browser menu</li>
+        <li>Choose <b>"Install App"</b> or <b>"Add to Home Screen"</b></li>
+        <li>Confirm</li>
+      </ol>
+    `;
+  }
+
+  steps.innerHTML = html;
+  $('installModal').classList.add('show');
+}
+
+function closeInstallModal(){
+  $('installModal').classList.remove('show');
+}
+
+function dismissInstallBar(){
+  $('installBar').style.display = 'none';
+  localStorage.setItem('ac_install_dismissed', '1');
+}
+
+/* Hide install bar if already installed OR user dismissed it */
+window.addEventListener('load', ()=>{
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const dismissed = localStorage.getItem('ac_install_dismissed') === '1';
+  if(isStandalone || dismissed){
+    $('installBar').style.display = 'none';
+  }
+});
+
+/* ---------- INIT ---------- */
 async function init(){
   try{
     await openDB();

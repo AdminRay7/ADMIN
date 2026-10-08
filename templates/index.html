@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Admin Console</title>
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#4f8cff">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginGate">
+  <div class="login-box">
+    <h1>🔐 Admin Console</h1>
+    <p>Python · Flask edition</p>
+    <input type="password" id="pwInput" placeholder="Enter admin password" autofocus>
+    <div class="err" id="loginErr"></div>
+    <button onclick="doLogin()">Unlock</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="wrap" id="app" style="display:none">
+  <header>
+    <h1><span class="dot"></span> Admin Console</h1>
+    <div class="head-actions">
+      <button class="icon-btn" onclick="handleInstall()" title="Install">🏠</button>
+      <button class="icon-btn danger" onclick="doLogout()" title="Lock">🔒</button>
+    </div>
+  </header>
+
+  <div class="status-bar">
+    <div class="item"><span class="led" id="ledCam"></span>Camera <b id="camStatus">off</b></div>
+    <div class="item"><span class="led" id="ledMic"></span>Mic <b id="micStatus">off</b></div>
+    <div class="item"><span class="led on"></span>Server <b id="srvStatus">online</b></div>
+    <div class="item"><span class="led on"></span>Uploads <b id="uploadCount">0</b></div>
+  </div>
+
+  <div class="grid" id="featureGrid">
+    <div class="feature" data-feature="camera"><span class="ico">📷</span><div class="name">Camera</div><div class="sub">Front + rear</div></div>
+    <div class="feature" data-feature="mic"><span class="ico">🎤</span><div class="name">Mic Record</div><div class="sub">Audio</div></div>
+    <div class="feature" data-feature="video"><span class="ico">🎥</span><div class="name">Video Record</div><div class="sub">Cam + mic</div></div>
+    <div class="feature" data-feature="location"><span class="ico">📍</span><div class="name">GPS</div><div class="sub">One-shot</div></div>
+    <div class="feature" data-feature="battery"><span class="ico">🔋</span><div class="name">Battery</div><div class="sub">Status</div></div>
+    <div class="feature" data-feature="device"><span class="ico">📱</span><div class="name">Device Info</div><div class="sub">Hardware</div></div>
+    <div class="feature" data-feature="network"><span class="ico">🌐</span><div class="name">Network</div><div class="sub">IP + speed</div></div>
+    <div class="feature" data-feature="audio"><span class="ico">🔊</span><div class="name">Play Audio</div><div class="sub">Remote sound</div></div>
+    <div class="feature" data-feature="notify"><span class="ico">🔔</span><div class="name">Notify</div><div class="sub">Push</div></div>
+    <div class="feature" data-feature="vibrate"><span class="ico">📳</span><div class="name">Vibrate</div><div class="sub">Buzz</div></div>
+  </div>
+
+  <div class="panel" id="activePanel" style="display:none">
+    <h2 id="panelTitle">Feature</h2>
+    <div id="panelBody"></div>
+  </div>
+
+  <div class="panel">
+    <h2>📜 Server Log <span id="logCount">0</span></h2>
+    <div class="log" id="sysLog"></div>
+  </div>
+
+  <div class="panel">
+    <h2>🗂 Uploads on Server <span id="uploadCount2">0 items</span></h2>
+    <div class="media-grid" id="mediaGrid">
+      <div class="empty">No uploads yet.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost" onclick="refreshUploads()">🔄 Refresh</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="installBar">
+  <div class="ib-icon">📲</div>
+  <div class="ib-text"><b>Install Admin Console</b><span>Tap to add to home screen</span></div>
+  <button class="ib-btn" onclick="handleInstall()">Install</button>
+  <button class="ib-close" onclick="dismissInstallBar()">✕</button>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

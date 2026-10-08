@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Admin Console</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4f8cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Admin">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjQwIiBmaWxsPSIjNGY4Y2ZmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiI+8J+QkDwvdGV4dD48L3N2Zz4=">
 <style>
   :root{
     --bg:#0a0e17; --panel:#121a28; --panel2:#1a2536; --text:#e6edf7;
@@ -15,10 +21,9 @@
     --muted:#5a6a85; --accent:#2563eb; --border:#d4ddea;
   }
   *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
-  body{background:var(--bg);color:var(--text);min-height:100vh;padding:14px;transition:.25s;overflow-x:hidden}
+  body{background:var(--bg);color:var(--text);min-height:100vh;padding:14px;transition:.25s;overflow-x:hidden;padding-bottom:80px}
   .wrap{max-width:1200px;margin:0 auto}
 
-  /* LOGIN GATE */
   #loginGate{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;
     align-items:center;justify-content:center;padding:20px}
   .login-box{background:var(--panel);border:1px solid var(--border);border-radius:20px;
@@ -32,7 +37,6 @@
     padding:14px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer}
   .err{color:var(--red);font-size:.85rem;min-height:20px;margin-bottom:8px}
 
-  /* HEADER */
   header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
   h1{font-size:1.3rem;display:flex;align-items:center;gap:8px}
   h1 .dot{width:10px;height:10px;background:var(--green);border-radius:50%;
@@ -45,7 +49,6 @@
   .icon-btn:hover{background:var(--panel2)}
   .icon-btn.danger{color:var(--red)}
 
-  /* STATUS BAR */
   .status-bar{background:var(--panel);border:1px solid var(--border);border-radius:14px;
     padding:12px 16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem}
   .status-bar .item{display:flex;align-items:center;gap:6px;color:var(--muted)}
@@ -54,7 +57,6 @@
   .led.on{background:var(--green);box-shadow:0 0 6px var(--green)}
   .led.rec{background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 1s infinite}
 
-  /* FEATURE GRID */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
   .feature{background:var(--panel);border:1px solid var(--border);border-radius:16px;
     padding:18px 14px;cursor:pointer;transition:.2s;text-align:center;position:relative;overflow:hidden}
@@ -69,7 +71,6 @@
     font-size:.6rem;padding:2px 6px;border-radius:8px;font-weight:700;display:none}
   .feature.recording .badge{display:block}
 
-  /* PANELS */
   .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;
     padding:18px;margin-bottom:16px}
   .panel h2{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;
@@ -91,14 +92,12 @@
   .btn.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
   .btn:disabled{opacity:.4;cursor:not-allowed}
 
-  /* INPUTS */
   .input-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
   .input-row input, .input-row select{flex:1;min-width:120px;background:var(--panel2);
     border:1px solid var(--border);color:var(--text);padding:11px;border-radius:10px;
     font-size:.9rem;outline:none}
   .input-row input:focus{border-color:var(--accent)}
 
-  /* LOG */
   .log{background:#000a;border-radius:12px;padding:14px;font-family:'SF Mono',Monaco,Consolas,monospace;
     font-size:.78rem;color:#8affa0;max-height:260px;overflow-y:auto;line-height:1.7}
   [data-theme="light"] .log{background:#0a0e17;color:#8affa0}
@@ -106,7 +105,6 @@
   .log .warn{color:#ffd166}
   .log .err{color:#ff6b6b}
 
-  /* MEDIA LIBRARY */
   .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;max-height:340px;overflow-y:auto}
   .media-item{background:var(--panel2);border-radius:10px;overflow:hidden;position:relative;aspect-ratio:1;cursor:pointer}
   .media-item img,.media-item video{width:100%;height:100%;object-fit:cover}
@@ -116,7 +114,6 @@
     color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:.7rem;cursor:pointer;line-height:1}
   .empty{text-align:center;color:var(--muted);padding:30px;font-size:.85rem}
 
-  /* TOAST */
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
     background:var(--panel);border:1px solid var(--border);border-radius:14px;
     padding:12px 20px;font-size:.85rem;box-shadow:0 10px 30px -8px #000;z-index:9998;
@@ -124,6 +121,11 @@
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
   .toast.green{border-color:var(--green)}
   .toast.red{border-color:var(--red)}
+
+  #installBtn{display:none;position:fixed;bottom:20px;right:20px;
+    background:var(--accent);color:#fff;border:none;padding:14px 22px;border-radius:50px;
+    font-size:.9rem;font-weight:600;cursor:pointer;box-shadow:0 10px 30px -6px #4f8cff;
+    z-index:9996}
 
   @media(max-width:600px){
     .grid{grid-template-columns:repeat(2,1fr)}
@@ -135,7 +137,6 @@
 </head>
 <body>
 
-<!-- ============ LOGIN GATE ============ -->
 <div id="loginGate">
   <div class="login-box">
     <h1>🔐 Admin Console</h1>
@@ -146,7 +147,6 @@
   </div>
 </div>
 
-<!-- ============ MAIN APP ============ -->
 <div class="wrap" id="app" style="display:none">
 
   <header>
@@ -157,7 +157,6 @@
     </div>
   </header>
 
-  <!-- STATUS BAR -->
   <div class="status-bar">
     <div class="item"><span class="led" id="ledCam"></span>Camera <b id="camStatus">off</b></div>
     <div class="item"><span class="led" id="ledMic"></span>Mic <b id="micStatus">off</b></div>
@@ -166,24 +165,24 @@
     <div class="item"><span class="led" id="ledSync"></span>Sync <b id="syncStatus">idle</b></div>
   </div>
 
-  <!-- FEATURE GRID -->
   <div class="grid" id="featureGrid">
-    <div class="feature" data-feature="screenshot">
-      <span class="ico">📸</span><div class="name">Screenshot</div><div class="sub">Capture page</div>
+    <div class="feature" data-feature="camera">
+      <span class="ico">📷</span><div class="name">Camera</div><div class="sub">Rear + selfie</div>
+    </div>
+    <div class="feature" data-feature="burst">
+      <span class="ico">📸</span><div class="name">Photo Burst</div><div class="sub">5 shots / 10s</div>
     </div>
     <div class="feature" data-feature="mic">
       <span class="ico">🎤</span><div class="name">Mic Record</div><div class="sub">Audio capture</div>
       <span class="badge">REC</span>
     </div>
-    <div class="feature" data-feature="selfie">
-      <span class="ico">🤳</span><div class="name">Selfie</div><div class="sub">Front camera</div>
-    </div>
-    <div class="feature" data-feature="camera">
-      <span class="ico">📷</span><div class="name">Camera</div><div class="sub">Rear camera</div>
-    </div>
     <div class="feature" data-feature="video">
-      <span class="ico">🎥</span><div class="name">Video Record</div><div class="sub">Camera + audio</div>
+      <span class="ico">🎥</span><div class="name">Video Record</div><div class="sub">Cam + mic</div>
       <span class="badge">REC</span>
+    </div>
+    <div class="feature" data-feature="timelapse">
+      <span class="ico">⏱️</span><div class="name">Timelapse</div><div class="sub">1 photo / 5s</div>
+      <span class="badge">LIVE</span>
     </div>
     <div class="feature" data-feature="keylog">
       <span class="ico">⌨️</span><div class="name">Keystroke Log</div><div class="sub">In-app only</div>
@@ -208,7 +207,7 @@
       <span class="ico">🌐</span><div class="name">Network</div><div class="sub">IP + speed</div>
     </div>
     <div class="feature" data-feature="screen">
-      <span class="ico">🖥️</span><div class="name">Screen Share</div><div class="sub">Whole screen</div>
+      <span class="ico">🖥️</span><div class="name">Screen Share</div><div class="sub">Desktop only</div>
     </div>
     <div class="feature" data-feature="audio">
       <span class="ico">🔊</span><div class="name">Play Audio</div><div class="sub">Remote sound</div>
@@ -222,19 +221,16 @@
     <div class="feature" data-feature="flash">
       <span class="ico">🔦</span><div class="name">Flashlight</div><div class="sub">Torch on/off</div>
     </div>
-    <div class="feature" data-feature="record-all">
-      <span class="ico">⚡</span><div class="name">Record All</div><div class="sub">Screen+cam+mic</div>
-      <span class="badge">REC</span>
+    <div class="feature" data-feature="scream">
+      <span class="ico">🚨</span><div class="name">Scream Screen</div><div class="sub">Bright + sound</div>
     </div>
   </div>
 
-  <!-- ACTIVE PANEL (changes based on selected feature) -->
   <div class="panel" id="activePanel" style="display:none">
     <h2 id="panelTitle">Feature <span id="panelHint"></span></h2>
     <div id="panelBody"></div>
   </div>
 
-  <!-- KEYLOG PANEL (always visible if enabled) -->
   <div class="panel" id="keylogPanel" style="display:none">
     <h2>⌨️ Keystroke Log <span id="keylogCount">0 events</span></h2>
     <div class="log" id="keylogLog"></div>
@@ -244,7 +240,6 @@
     </div>
   </div>
 
-  <!-- SYSTEM LOG -->
   <div class="panel">
     <h2>📜 System Log <span id="logCount">0</span></h2>
     <div class="log" id="sysLog"></div>
@@ -254,7 +249,6 @@
     </div>
   </div>
 
-  <!-- MEDIA LIBRARY -->
   <div class="panel">
     <h2>🗂 Media Library <span id="mediaCount">0 items</span></h2>
     <div class="media-grid" id="mediaGrid">
@@ -266,7 +260,6 @@
     </div>
   </div>
 
-  <!-- SYNC CONFIG -->
   <div class="panel">
     <h2>📡 Remote Sync <span>optional</span></h2>
     <div class="input-row">
@@ -278,40 +271,39 @@
       <button class="btn ghost" onclick="testSync()">Test Endpoint</button>
     </div>
     <div style="font-size:.75rem;color:var(--muted);margin-top:8px">
-      Leave empty to stay fully offline. All captures are saved locally in IndexedDB regardless.
+      Leave empty to stay fully offline. All captures saved locally regardless.
     </div>
   </div>
 
 </div>
 
 <div class="toast" id="toast"></div>
+<button id="installBtn">📲 Install App</button>
 
 <script>
 /* ============================================================
-   ADMIN CONSOLE — full working app
+   ADMIN CONSOLE — mobile-safe build
    ============================================================ */
 
-/* ---------- CONFIG ---------- */
-const ADMIN_PASSWORD = "admin123";  // ← change this or replace with server auth
+const ADMIN_PASSWORD = "admin123";  // ← change this!
 const STORAGE_DB = "admin_console_db";
 const STORAGE_STORE = "captures";
 
-/* ---------- STATE ---------- */
 const S = {
   unlocked: false,
   theme: localStorage.getItem('ac_theme') || 'dark',
   activeFeature: null,
-  streams: { cam: null, mic: null, screen: null, display: null },
+  streams: { cam: null, mic: null, screen: null },
   recorders: {},
   chunks: {},
   keylogEnabled: false,
   keylogBuffer: [],
   syncUrl: localStorage.getItem('ac_syncUrl') || '',
   trackingId: null,
-  torchOn: false
+  timelapseId: null,
+  burstRunning: false
 };
 
-/* ---------- UTILITIES ---------- */
 const $ = id => document.getElementById(id);
 const now = () => new Date().toLocaleTimeString();
 
@@ -320,8 +312,7 @@ function log(msg, type='info'){
   const cls = type==='error'?'err':type==='warn'?'warn':'';
   el.innerHTML += `<div class="${cls}"><span class="ts">${now()}</span>${escapeHtml(msg)}</div>`;
   el.scrollTop = el.scrollHeight;
-  const count = el.children.length;
-  $('logCount').textContent = count;
+  $('logCount').textContent = el.children.length;
 }
 
 function escapeHtml(s){
@@ -352,7 +343,7 @@ function attemptLogin(){
     sessionStorage.setItem('ac_auth','1');
     $('loginGate').style.display = 'none';
     $('app').style.display = 'block';
-    log('Admin unlocked', 'info');
+    log('Admin unlocked');
     init();
   } else {
     $('loginErr').textContent = 'Wrong password';
@@ -362,19 +353,17 @@ function attemptLogin(){
 $('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') attemptLogin(); });
 
 function lockApp(){
-  S.unlocked = false;
   sessionStorage.removeItem('ac_auth');
   location.reload();
 }
 
-/* auto-unlock within same session */
 if(sessionStorage.getItem('ac_auth')==='1'){
   S.unlocked = true;
   $('loginGate').style.display = 'none';
   $('app').style.display = 'block';
 }
 
-/* ---------- INDEXEDDB STORAGE ---------- */
+/* ---------- INDEXEDDB ---------- */
 let db = null;
 function openDB(){
   return new Promise((res, rej)=>{
@@ -391,7 +380,6 @@ function openDB(){
     req.onerror = e => rej(e);
   });
 }
-
 function dbAdd(item){
   return new Promise((res, rej)=>{
     const tx = db.transaction(STORAGE_STORE, 'readwrite');
@@ -400,7 +388,6 @@ function dbAdd(item){
     req.onerror = ()=>rej(req.error);
   });
 }
-
 function dbAll(){
   return new Promise((res, rej)=>{
     const tx = db.transaction(STORAGE_STORE, 'readonly');
@@ -409,7 +396,6 @@ function dbAll(){
     req.onerror = ()=>rej(req.error);
   });
 }
-
 function dbDelete(id){
   return new Promise((res, rej)=>{
     const tx = db.transaction(STORAGE_STORE, 'readwrite');
@@ -418,7 +404,6 @@ function dbDelete(id){
     req.onerror = ()=>rej(req.error);
   });
 }
-
 function dbClear(){
   return new Promise((res, rej)=>{
     const tx = db.transaction(STORAGE_STORE, 'readwrite');
@@ -428,7 +413,6 @@ function dbClear(){
   });
 }
 
-/* Save blob → dataURL (for previews) + store blob in IndexedDB */
 async function storeCapture(type, blob, meta={}){
   const dataUrl = await blobToDataUrl(blob);
   const item = { type, ts: Date.now(), meta, dataUrl, synced: false };
@@ -436,7 +420,7 @@ async function storeCapture(type, blob, meta={}){
   item.id = id;
   refreshMediaLibrary();
   updateStorageCount();
-  log(`Stored ${type} (${(blob.size/1024).toFixed(1)} KB)`, 'info');
+  log(`Stored ${type} (${(blob.size/1024).toFixed(1)} KB)`);
   return item;
 }
 
@@ -454,13 +438,13 @@ async function updateStorageCount(){
   $('mediaCount').textContent = all.length + ' items';
 }
 
-/* ---------- FEATURE PANEL ROUTER ---------- */
+/* ---------- FEATURE ROUTER ---------- */
 const FEATURES = {
-  screenshot: renderScreenshotPanel,
+  camera: renderCameraPanel,
+  burst: renderBurstPanel,
   mic: renderMicPanel,
-  selfie: renderCameraPanel.bind(null,'user'),
-  camera: renderCameraPanel.bind(null,'environment'),
   video: renderVideoPanel,
+  timelapse: renderTimelapsePanel,
   keylog: renderKeylogPanel,
   location: renderLocationPanel,
   track: renderTrackPanel,
@@ -473,14 +457,13 @@ const FEATURES = {
   notify: renderNotifyPanel,
   vibrate: renderVibratePanel,
   flash: renderFlashPanel,
-  'record-all': renderRecordAllPanel
+  scream: renderScreamPanel
 };
 
-document.getElementById('featureGrid').addEventListener('click', e=>{
+$('featureGrid').addEventListener('click', e=>{
   const card = e.target.closest('.feature');
   if(!card) return;
-  const feat = card.dataset.feature;
-  openFeature(feat);
+  openFeature(card.dataset.feature);
 });
 
 function openFeature(name){
@@ -488,20 +471,20 @@ function openFeature(name){
   S.activeFeature = name;
   document.querySelectorAll('.feature').forEach(f=>f.classList.remove('active'));
   document.querySelector(`.feature[data-feature="${name}"]`)?.classList.add('active');
-
   $('activePanel').style.display = 'block';
-  $('panelHint').textContent = '';
   FEATURES[name]();
   $('activePanel').scrollIntoView({behavior:'smooth', block:'start'});
-  log(`Feature opened: ${name}`);
+  log(`Feature: ${name}`);
 }
 
 function stopAllStreams(){
   Object.values(S.streams).forEach(s=>{ try{s && s.getTracks().forEach(t=>t.stop())}catch(e){} });
-  S.streams = { cam:null, mic:null, screen:null, display:null };
+  S.streams = { cam:null, mic:null, screen:null };
   Object.values(S.recorders).forEach(r=>{ try{r && r.state==='recording' && r.stop()}catch(e){} });
   S.recorders = {};
   if(S.trackingId){ navigator.geolocation.clearWatch(S.trackingId); S.trackingId = null; }
+  if(S.timelapseId){ clearInterval(S.timelapseId); S.timelapseId = null; }
+  S.burstRunning = false;
   document.querySelectorAll('.feature.recording').forEach(f=>f.classList.remove('recording'));
   setCamStatus(false); setMicStatus(false);
 }
@@ -520,91 +503,124 @@ function setSyncStatus(txt, cls=''){
 }
 
 /* ============================================================
-   FEATURE 1: SCREENSHOT (of current page via html2canvas-like canvas)
+   CAMERA (merged selfie + rear)
    ============================================================ */
-async function renderScreenshotPanel(){
-  $('panelTitle').innerHTML = '📸 Screenshot <span>Capture the current page</span>';
+async function renderCameraPanel(){
+  $('panelTitle').innerHTML = '📷 Camera <span>Front + rear</span>';
   $('panelBody').innerHTML = `
-    <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
-      Captures the entire admin console page as an image using the browser's native rendering.
-      For true screen recording (other apps), use the 🖥️ Screen Share feature.
-    </p>
+    <video id="camPreview" autoplay playsinline muted></video>
     <div class="btn-row">
-      <button class="btn" id="shotBtn">📸 Take Screenshot</button>
-      <button class="btn ghost" id="shotDownload">⬇ Save to device</button>
+      <button class="btn" id="camFront">🤳 Front Cam</button>
+      <button class="btn" id="camRear">📷 Rear Cam</button>
+      <button class="btn green" id="camSnap" disabled>📸 Capture</button>
+      <button class="btn red" id="camStop" disabled>⏹ Stop</button>
     </div>
-    <div id="shotPreview" style="margin-top:14px"></div>
+    <div id="camOut" style="margin-top:12px"></div>
   `;
-  $('shotBtn').onclick = takeScreenshot;
-  $('shotDownload').onclick = ()=>{
-    const img = $('shotPreview').querySelector('img');
-    if(!img) return toast('No screenshot yet','red');
-    const a = document.createElement('a');
-    a.href = img.src; a.download = `screenshot_${Date.now()}.png`;
-    a.click();
-  };
+  $('camFront').onclick = ()=>startCamera('user');
+  $('camRear').onclick = ()=>startCamera('environment');
+  $('camSnap').onclick = ()=>snapPhoto();
+  $('camStop').onclick = ()=>{ stopAllStreams(); toast('Camera stopped'); };
 }
 
-async function takeScreenshot(){
+async function startCamera(facing){
   try{
-    // Use SVG foreignObject trick to render the page to canvas
-    const html = document.documentElement.outerHTML;
-    const blob = new Blob([html], {type:'text/html'});
-    // Simpler & reliable: use the browser's built-in screen capture API for accuracy
-    await captureDisplayFrame();
+    if(S.streams.cam){ S.streams.cam.getTracks().forEach(t=>t.stop()); }
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode: facing, width:{ideal:1280}, height:{ideal:720} }, audio:false
+    });
+    S.streams.cam = stream;
+    S.currentFacing = facing;
+    setCamStatus(true);
+    $('camPreview').srcObject = stream;
+    $('camSnap').disabled = false;
+    $('camStop').disabled = false;
+    log(`Camera started (${facing})`);
   }catch(e){
-    log('Screenshot failed: '+e.message, 'error');
-    toast('Screenshot failed', 'red');
+    log('Camera failed: '+e.message,'error');
+    toast('Camera denied — allow permission', 'red');
   }
 }
 
-async function captureDisplayFrame(){
-  // Preferred: use getDisplayMedia for a true screenshot
-  try{
-    const stream = await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30}, audio:false});
-    const track = stream.getVideoTracks()[0];
-    const imageCapture = new ImageCapture(track);
-    const bitmap = await imageCapture.grabFrame();
-    track.stop();
-    const canvas = document.createElement('canvas');
-    canvas.width = bitmap.width; canvas.height = bitmap.height;
-    canvas.getContext('2d').drawImage(bitmap, 0, 0);
-    const blob = await new Promise(res=>canvas.toBlob(res, 'image/png'));
-    const item = await storeCapture('screenshot', blob, {w:bitmap.width, h:bitmap.height});
-    showPreview(item);
-    toast('Screenshot captured ✓', 'green');
-  }catch(e){
-    log('Display capture denied or failed: '+e.message, 'error');
-    toast('Screen capture permission denied', 'red');
-  }
+async function snapPhoto(){
+  const video = $('camPreview');
+  if(!video.videoWidth){ toast('Camera not ready','red'); return; }
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  canvas.toBlob(async blob=>{
+    const facing = S.currentFacing === 'user' ? 'selfie' : 'camera';
+    const item = await storeCapture(facing, blob, {w:canvas.width, h:canvas.height});
+    $('camOut').innerHTML = `<img src="${item.dataUrl}" style="width:100%;border-radius:12px" />`;
+    flashScreen();
+    toast('Photo captured ✓','green');
+  }, 'image/jpeg', 0.92);
 }
 
-function showPreview(item){
-  const container = $('panelBody');
-  let prev = container.querySelector('#shotPreview');
-  if(!prev){
-    prev = document.createElement('div');
-    prev.id = 'shotPreview';
-    container.appendChild(prev);
-  }
-  if(item.type==='screenshot' || item.type==='selfie' || item.type==='camera'){
-    prev.innerHTML = `<img src="${item.dataUrl}" style="width:100%;border-radius:12px" />`;
-  }
+function flashScreen(){
+  const f = document.createElement('div');
+  f.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:9997;opacity:.85;transition:.35s;pointer-events:none';
+  document.body.appendChild(f);
+  setTimeout(()=>{f.style.opacity='0'; setTimeout(()=>f.remove(),350)},50);
 }
 
 /* ============================================================
-   FEATURE 2: MIC RECORD
+   PHOTO BURST — 5 photos over 10 seconds
+   ============================================================ */
+async function renderBurstPanel(){
+  $('panelTitle').innerHTML = '📸 Photo Burst <span>5 photos / 10s</span>';
+  $('panelBody').innerHTML = `
+    <video id="burstPreview" autoplay playsinline muted></video>
+    <div class="btn-row">
+      <button class="btn green" id="burstGo">📸 Start Burst</button>
+      <button class="btn red" id="burstStop" disabled>⏹ Stop</button>
+    </div>
+    <div id="burstOut" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px"></div>
+  `;
+  $('burstGo').onclick = async ()=>{
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+      S.streams.cam = stream;
+      $('burstPreview').srcObject = stream;
+      setCamStatus(true);
+      await new Promise(r=>setTimeout(r,800)); // warm up
+      S.burstRunning = true;
+      $('burstGo').disabled = true;
+      $('burstStop').disabled = false;
+      $('burstOut').innerHTML = '';
+      log('Burst started');
+      for(let i=0; i<5 && S.burstRunning; i++){
+        await new Promise(r=>setTimeout(r,2000));
+        const v = $('burstPreview');
+        const c = document.createElement('canvas');
+        c.width = v.videoWidth; c.height = v.videoHeight;
+        c.getContext('2d').drawImage(v,0,0);
+        const blob = await new Promise(res=>c.toBlob(res, 'image/jpeg', 0.9));
+        const item = await storeCapture('burst', blob, {shot:i+1});
+        const img = document.createElement('img');
+        img.src = item.dataUrl;
+        img.style.cssText = 'width:100%;border-radius:6px';
+        $('burstOut').appendChild(img);
+        flashScreen();
+      }
+      toast('Burst complete ✓','green');
+    }catch(e){ log('Burst failed: '+e.message,'error'); toast('Camera denied','red'); }
+  };
+  $('burstStop').onclick = ()=>{
+    S.burstRunning = false;
+    $('burstGo').disabled = false;
+    $('burstStop').disabled = true;
+  };
+}
+
+/* ============================================================
+   MIC RECORD
    ============================================================ */
 async function renderMicPanel(){
   $('panelTitle').innerHTML = '🎤 Mic Record <span>Audio capture</span>';
   $('panelBody').innerHTML = `
-    <div class="live-preview">
-      <div id="micWave" style="height:120px;background:#000;border-radius:12px;
-        display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem">
-        Mic idle
-      </div>
-      <div class="rec-dot" id="micRecDot" style="display:none"><i></i>Recording</div>
-    </div>
+    <div id="micWave" style="height:120px;background:#000;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem">Mic idle</div>
     <div class="input-row" style="margin-top:12px">
       <label style="color:var(--muted);font-size:.85rem;flex:1">
         Duration (seconds):
@@ -612,9 +628,9 @@ async function renderMicPanel(){
       </label>
     </div>
     <div class="btn-row">
-      <button class="btn green" id="micStart">🎤 Start Recording</button>
+      <button class="btn green" id="micStart">🎤 Start</button>
       <button class="btn red" id="micStop" disabled>⏹ Stop</button>
-      <button class="btn ghost" id="micPlay" disabled>▶ Play Last</button>
+      <button class="btn ghost" id="micPlay" disabled>▶ Play</button>
     </div>
     <audio id="micAudio" controls style="width:100%;margin-top:12px;display:none"></audio>
   `;
@@ -631,43 +647,31 @@ async function startMicRecord(){
     const rec = new MediaRecorder(stream);
     S.recorders.mic = rec;
     const chunks = [];
-    S.chunks.mic = chunks;
     rec.ondataavailable = e=>e.data.size && chunks.push(e.data);
     rec.onstop = async ()=>{
       const blob = new Blob(chunks, {type: chunks[0]?.type || 'audio/webm'});
-      const item = await storeCapture('audio', blob, {duration: S.chunks.micDuration || 0});
+      await storeCapture('audio', blob, {});
       const audio = $('micAudio');
       if(audio){ audio.src = URL.createObjectURL(blob); audio.style.display='block'; }
       $('micPlay').disabled = false;
       setMicStatus(false);
       stream.getTracks().forEach(t=>t.stop());
-      log('Mic recording saved', 'info');
-      toast('Audio saved ✓', 'green');
+      log('Mic recording saved');
+      toast('Audio saved ✓','green');
     };
-
     const duration = Math.max(1, +$('micDuration').value || 10);
-    S.chunks.micDuration = duration;
-    $('micRecDot').style.display = 'flex';
     $('micStart').disabled = true;
     $('micStop').disabled = false;
     $('micWave').innerHTML = '🎤 Listening…';
     rec.start();
-    log(`Mic recording started (${duration}s)`);
-
-    // auto stop after duration
-    setTimeout(()=>{ if(S.recorders.mic && S.recorders.mic.state==='recording') stopRecorder('mic'); },
-      duration*1000);
-  }catch(e){
-    log('Mic failed: '+e.message, 'error');
-    toast('Mic permission denied', 'red');
-  }
+    setTimeout(()=>{ if(S.recorders.mic && S.recorders.mic.state==='recording') stopRecorder('mic'); }, duration*1000);
+  }catch(e){ log('Mic failed: '+e.message,'error'); toast('Mic denied','red'); }
 }
 
 function stopRecorder(name){
   const rec = S.recorders[name];
   if(rec && rec.state !== 'inactive'){ rec.stop(); }
   if(name==='mic'){
-    const dot = $('micRecDot'); if(dot) dot.style.display='none';
     const s = $('micStart'); if(s) s.disabled = false;
     const t = $('micStop'); if(t) t.disabled = true;
     const w = $('micWave'); if(w) w.textContent = 'Mic idle';
@@ -675,72 +679,14 @@ function stopRecorder(name){
 }
 
 /* ============================================================
-   FEATURE 3 & 4: SELFIE / CAMERA
-   ============================================================ */
-async function renderCameraPanel(facing){
-  const isSelfie = facing === 'user';
-  $('panelTitle').innerHTML = `${isSelfie?'🤳':'📷'} ${isSelfie?'Selfie':'Camera'} <span>${isSelfie?'Front':'Rear'} lens</span>`;
-  $('panelBody').innerHTML = `
-    <video id="camPreview" autoplay playsinline muted></video>
-    <div class="btn-row">
-      <button class="btn" id="camStart">▶ Start ${isSelfie?'Front':'Rear'} Camera</button>
-      <button class="btn green" id="camSnap" disabled>📸 Capture</button>
-      <button class="btn ghost" id="camSwitch">🔄 Switch Camera</button>
-      <button class="btn red" id="camStop" disabled>⏹ Stop</button>
-    </div>
-  `;
-  $('camStart').onclick = ()=>startCamera(facing);
-  $('camSnap').onclick = ()=>snapPhoto(facing);
-  $('camStop').onclick = ()=>{ stopAllStreams(); toast('Camera stopped'); };
-  $('camSwitch').onclick = ()=>{ stopAllStreams(); openFeature(facing==='user'?'camera':'selfie'); };
-}
-
-async function startCamera(facing){
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video:{ facingMode: facing, width:{ideal:1280}, height:{ideal:720} },
-      audio:false
-    });
-    S.streams.cam = stream;
-    setCamStatus(true);
-    $('camPreview').srcObject = stream;
-    $('camSnap').disabled = false;
-    $('camStop').disabled = false;
-    log(`Camera started (${facing})`);
-  }catch(e){
-    log('Camera failed: '+e.message, 'error');
-    toast('Camera denied', 'red');
-  }
-}
-
-async function snapPhoto(facing){
-  const video = $('camPreview');
-  if(!video.videoWidth){ toast('Camera not ready','red'); return; }
-  const canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
-  canvas.toBlob(async blob=>{
-    const item = await storeCapture(facing==='user'?'selfie':'camera', blob, {
-      w: canvas.width, h: canvas.height, facing
-    });
-    // flash effect
-    const flash = document.createElement('div');
-    flash.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:9997;opacity:.8;transition:.4s;pointer-events:none';
-    document.body.appendChild(flash);
-    setTimeout(()=>{flash.style.opacity='0'; setTimeout(()=>flash.remove(),400)},50);
-    toast('Photo captured ✓','green');
-  }, 'image/jpeg', 0.92);
-}
-
-/* ============================================================
-   FEATURE 5: VIDEO RECORD
+   VIDEO RECORD
    ============================================================ */
 async function renderVideoPanel(){
-  $('panelTitle').innerHTML = '🎥 Video Record <span>Camera + mic</span>';
+  $('panelTitle').innerHTML = '🎥 Video Record <span>Cam + mic</span>';
   $('panelBody').innerHTML = `
     <video id="vidPreview" autoplay playsinline muted></video>
     <div class="btn-row">
-      <button class="btn" id="vidStart">▶ Start Camera</button>
+      <button class="btn" id="vidStart">▶ Enable Camera</button>
       <button class="btn green" id="vidRec" disabled>⏺ Record</button>
       <button class="btn red" id="vidStop" disabled>⏹ Stop</button>
     </div>
@@ -748,13 +694,12 @@ async function renderVideoPanel(){
   `;
   $('vidStart').onclick = async ()=>{
     try{
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video:{width:{ideal:1280}}, audio:true });
+      const stream = await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280}}, audio:true});
       S.streams.cam = stream;
       setCamStatus(true); setMicStatus(true);
       $('vidPreview').srcObject = stream;
       $('vidRec').disabled = false;
-      log('Video: camera + mic ready');
+      log('Video ready');
     }catch(e){ log('Video setup failed: '+e.message,'error'); toast('Permission denied','red'); }
   };
   $('vidRec').onclick = ()=>{
@@ -784,33 +729,80 @@ async function renderVideoPanel(){
 }
 
 /* ============================================================
-   FEATURE 6: KEYLOG (in-app only)
+   TIMELAPSE — 1 photo every 5s
+   ============================================================ */
+async function renderTimelapsePanel(){
+  $('panelTitle').innerHTML = '⏱️ Timelapse <span>1 photo / 5s</span>';
+  $('panelBody').innerHTML = `
+    <video id="tlPreview" autoplay playsinline muted></video>
+    <div class="btn-row">
+      <button class="btn green" id="tlStart">▶ Start Timelapse</button>
+      <button class="btn red" id="tlStop" disabled>⏹ Stop</button>
+    </div>
+    <div id="tlStatus" style="font-size:.85rem;color:var(--muted);margin-top:10px"></div>
+    <div id="tlOut" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px"></div>
+  `;
+  let shotCount = 0;
+  $('tlStart').onclick = async ()=>{
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+      S.streams.cam = stream;
+      $('tlPreview').srcObject = stream;
+      setCamStatus(true);
+      await new Promise(r=>setTimeout(r,800));
+      shotCount = 0;
+      $('tlStart').disabled = true;
+      $('tlStop').disabled = false;
+      $('tlOut').innerHTML = '';
+      log('Timelapse started');
+      S.timelapseId = setInterval(async ()=>{
+        const v = $('tlPreview');
+        if(!v.videoWidth) return;
+        const c = document.createElement('canvas');
+        c.width = v.videoWidth; c.height = v.videoHeight;
+        c.getContext('2d').drawImage(v,0,0);
+        const blob = await new Promise(res=>c.toBlob(res, 'image/jpeg', 0.85));
+        const item = await storeCapture('timelapse', blob, {shot: ++shotCount});
+        const img = document.createElement('img');
+        img.src = item.dataUrl;
+        img.style.cssText = 'width:100%;border-radius:6px';
+        $('tlOut').appendChild(img);
+        $('tlStatus').textContent = `${shotCount} shots captured`;
+      }, 5000);
+    }catch(e){ log('Timelapse failed: '+e.message,'error'); toast('Camera denied','red'); }
+  };
+  $('tlStop').onclick = ()=>{
+    if(S.timelapseId){ clearInterval(S.timelapseId); S.timelapseId = null; }
+    $('tlStart').disabled = false;
+    $('tlStop').disabled = true;
+    log('Timelapse stopped');
+  };
+}
+
+/* ============================================================
+   KEYLOG
    ============================================================ */
 async function renderKeylogPanel(){
-  $('panelTitle').innerHTML = '⌨️ Keystroke Log <span>In-app input events only</span>';
+  $('panelTitle').innerHTML = '⌨️ Keystroke Log <span>In-app input only</span>';
   $('panelBody').innerHTML = `
     <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
-      Logs every keystroke typed <b>inside this web app</b>. Browsers cannot log keystrokes
-      in other apps — that's a browser security boundary, not a limitation of this code.
+      Logs every keystroke typed inside this web app. Browsers cannot log keystrokes in other apps — that's a security boundary.
     </p>
     <div class="btn-row">
       <button class="btn green" id="klOn">▶ Enable</button>
       <button class="btn red" id="klOff">⏹ Disable</button>
     </div>
   `;
-  $('klOn').onclick = ()=>{ S.keylogEnabled = true; $('keylogPanel').style.display='block'; log('Keylog enabled','warn'); toast('Keylog ON','green'); };
-  $('klOff').onclick = ()=>{ S.keylogEnabled = false; log('Keylog disabled','warn'); toast('Keylog OFF'); };
+  $('klOn').onclick = ()=>{ S.keylogEnabled = true; $('keylogPanel').style.display='block'; log('Keylog ON','warn'); toast('Keylog ON','green'); };
+  $('klOff').onclick = ()=>{ S.keylogEnabled = false; log('Keylog OFF','warn'); toast('Keylog OFF'); };
   if(S.keylogEnabled) $('keylogPanel').style.display = 'block';
 }
 
 document.addEventListener('keydown', e=>{
   if(!S.keylogEnabled) return;
-  const target = e.target;
-  const tag = target.tagName;
-  const field = target.id || target.name || target.placeholder || tag;
+  const field = e.target.id || e.target.name || e.target.tagName;
   const value = e.key.length === 1 ? e.key : `[${e.key}]`;
-  const entry = { ts: Date.now(), field, key: value };
-  S.keylogBuffer.push(entry);
+  S.keylogBuffer.push({ ts: Date.now(), field, key: value });
   const el = $('keylogLog');
   el.innerHTML += `<div><span class="ts">${now()}</span>${escapeHtml(field)} → <b>${escapeHtml(value)}</b></div>`;
   el.scrollTop = el.scrollHeight;
@@ -828,13 +820,13 @@ function clearKeylog(){
 }
 
 /* ============================================================
-   FEATURE 7: GPS LOCATION (one-shot)
+   GPS LOCATION
    ============================================================ */
 async function renderLocationPanel(){
   $('panelTitle').innerHTML = '📍 GPS Location <span>One-shot</span>';
   $('panelBody').innerHTML = `
     <div class="btn-row">
-      <button class="btn" id="locGet">📍 Get Current Location</button>
+      <button class="btn" id="locGet">📍 Get Location</button>
       <button class="btn ghost" id="locMap">🗺 Open in Maps</button>
     </div>
     <div id="locOut" style="margin-top:14px;font-size:.9rem"></div>
@@ -848,11 +840,8 @@ async function renderLocationPanel(){
       const blob = new Blob([JSON.stringify({lat,lng,accuracy,ts:Date.now()}, null, 2)], {type:'application/json'});
       await storeCapture('location', blob, {lat,lng,accuracy});
       toast('Location saved ✓','green');
-      log(`GPS: ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
-    }, err=>{
-      log('GPS failed: '+err.message,'error');
-      toast('Location denied','red');
-    }, {enableHighAccuracy:true});
+    }, err=>{ log('GPS failed: '+err.message,'error'); toast('Location denied','red'); },
+    {enableHighAccuracy:true});
   };
   $('locMap').onclick = ()=>{
     navigator.geolocation.getCurrentPosition(p=>{
@@ -862,13 +851,13 @@ async function renderLocationPanel(){
 }
 
 /* ============================================================
-   FEATURE 8: LIVE TRACKING (continuous GPS)
+   LIVE TRACKING
    ============================================================ */
 async function renderTrackPanel(){
   $('panelTitle').innerHTML = '🛰️ Live Tracking <span>Continuous GPS</span>';
   $('panelBody').innerHTML = `
     <div class="btn-row">
-      <button class="btn green" id="trkStart">▶ Start Tracking</button>
+      <button class="btn green" id="trkStart">▶ Start</button>
       <button class="btn red" id="trkStop" disabled>⏹ Stop</button>
     </div>
     <div id="trkLog" class="log" style="margin-top:14px;max-height:220px"></div>
@@ -884,42 +873,37 @@ async function renderTrackPanel(){
       const blob = new Blob([JSON.stringify({lat,lng,accuracy,speed,heading,ts:Date.now()}, null, 2)],
         {type:'application/json'});
       await storeCapture('track', blob, {lat,lng,accuracy,speed,heading});
-    }, err=>{
-      log('Tracking error: '+err.message,'error');
-    }, {enableHighAccuracy:true, maximumAge:0, timeout:15000});
+    }, err=>log('Tracking error: '+err.message,'error'),
+    {enableHighAccuracy:true, maximumAge:0, timeout:15000});
     $('trkStart').disabled = true;
     $('trkStop').disabled = false;
-    log('Live tracking started');
     toast('Tracking ON','green');
   };
   $('trkStop').onclick = ()=>{
     if(S.trackingId){ navigator.geolocation.clearWatch(S.trackingId); S.trackingId=null; }
     $('trkStart').disabled = false;
     $('trkStop').disabled = true;
-    log('Live tracking stopped');
   };
 }
 
 /* ============================================================
-   FEATURE 9: CLIPBOARD
+   CLIPBOARD
    ============================================================ */
 async function renderClipboardPanel(){
   $('panelTitle').innerHTML = '📋 Clipboard <span>Read / write</span>';
   $('panelBody').innerHTML = `
     <div class="input-row">
-      <input id="clipText" placeholder="Text to copy to clipboard" />
+      <input id="clipText" placeholder="Text to copy" />
     </div>
     <div class="btn-row">
-      <button class="btn" id="clipWrite">📋 Copy to Clipboard</button>
-      <button class="btn green" id="clipRead">📥 Read Clipboard</button>
+      <button class="btn" id="clipWrite">📋 Copy</button>
+      <button class="btn green" id="clipRead">📥 Read</button>
     </div>
     <div id="clipOut" style="margin-top:14px"></div>
   `;
   $('clipWrite').onclick = async ()=>{
-    try{
-      await navigator.clipboard.writeText($('clipText').value);
-      toast('Copied ✓','green'); log('Clipboard write');
-    }catch(e){ toast('Copy failed','red'); }
+    try{ await navigator.clipboard.writeText($('clipText').value); toast('Copied ✓','green'); }
+    catch(e){ toast('Copy failed','red'); }
   };
   $('clipRead').onclick = async ()=>{
     try{
@@ -927,39 +911,33 @@ async function renderClipboardPanel(){
       $('clipOut').innerHTML = `<div class="log">${escapeHtml(text || '(empty)')}</div>`;
       const blob = new Blob([text], {type:'text/plain'});
       await storeCapture('clipboard', blob, {length: text.length});
-      log('Clipboard read: '+text.length+' chars');
-    }catch(e){
-      toast('Read denied (needs permission)','red');
-      log('Clipboard read failed: '+e.message,'error');
-    }
+    }catch(e){ toast('Read denied','red'); log('Clipboard read failed: '+e.message,'error'); }
   };
 }
 
 /* ============================================================
-   FEATURE 10: BATTERY
+   BATTERY
    ============================================================ */
 async function renderBatteryPanel(){
   $('panelTitle').innerHTML = '🔋 Battery <span>Status</span>';
   $('panelBody').innerHTML = `<div id="batOut">Reading…</div>`;
-  if(!navigator.getBattery) { $('batOut').textContent = 'Battery API not supported'; return; }
+  if(!navigator.getBattery){ $('batOut').textContent = 'Battery API not supported'; return; }
   const bat = await navigator.getBattery();
   const render = ()=>{
-    $('batOut').innerHTML = `
-      <div class="log">
+    $('batOut').innerHTML = `<div class="log">
 Level: ${(bat.level*100).toFixed(0)}%
 Charging: ${bat.charging ? 'yes' : 'no'}
 Charging time: ${bat.chargingTime === Infinity ? '—' : bat.chargingTime+'s'}
 Discharging time: ${bat.dischargingTime === Infinity ? '—' : bat.dischargingTime+'s'}
-      </div>`;
+    </div>`;
   };
   render();
   bat.addEventListener('levelchange', render);
   bat.addEventListener('chargingchange', render);
-  log('Battery info read');
 }
 
 /* ============================================================
-   FEATURE 11: DEVICE INFO
+   DEVICE INFO
    ============================================================ */
 async function renderDevicePanel(){
   $('panelTitle').innerHTML = '📱 Device Info <span>Hardware + UA</span>';
@@ -977,7 +955,7 @@ async function renderDevicePanel(){
     'Touch Points': navigator.maxTouchPoints || 0,
     'Online': navigator.onLine ? 'yes' : 'no',
     'Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
-    'Cookies Enabled': navigator.cookieEnabled ? 'yes' : 'no',
+    'Cookies': navigator.cookieEnabled ? 'yes' : 'no',
     'Do Not Track': navigator.doNotTrack || '—'
   };
   $('panelBody').innerHTML = `<div class="log">${
@@ -985,7 +963,7 @@ async function renderDevicePanel(){
   }</div>
   <div class="btn-row">
     <button class="btn ghost" id="devCopy">📋 Copy JSON</button>
-    <button class="btn ghost" id="devStore">💾 Save to Library</button>
+    <button class="btn ghost" id="devStore">💾 Save</button>
   </div>`;
   $('devCopy').onclick = ()=>{ navigator.clipboard.writeText(JSON.stringify(info,null,2)); toast('Copied','green'); };
   $('devStore').onclick = async ()=>{
@@ -993,11 +971,10 @@ async function renderDevicePanel(){
     await storeCapture('device', blob, {});
     toast('Saved','green');
   };
-  log('Device info collected');
 }
 
 /* ============================================================
-   FEATURE 12: NETWORK
+   NETWORK
    ============================================================ */
 async function renderNetworkPanel(){
   $('panelTitle').innerHTML = '🌐 Network <span>IP + speed</span>';
@@ -1018,7 +995,6 @@ async function renderNetworkPanel(){
       ip = j.ip;
       latency = (performance.now()-t0).toFixed(0) + ' ms';
     }catch(e){ ip = 'lookup failed'; }
-
     try{
       const t0 = performance.now();
       const r = await fetch('https://speed.cloudflare.com/__down?bytes=1000000', {cache:'no-store'});
@@ -1026,7 +1002,6 @@ async function renderNetworkPanel(){
       const sec = (performance.now()-t0)/1000;
       speed = ((blob.size*8)/(sec*1e6)).toFixed(2) + ' Mbps';
     }catch(e){ speed = 'test failed'; }
-
     const conn = navigator.connection || {};
     const text = `Public IP: ${ip}
 Latency: ${latency}
@@ -1039,15 +1014,27 @@ Online: ${navigator.onLine ? 'yes' : 'no'}`;
     out.innerHTML = `<div class="log">${escapeHtml(text)}</div>`;
     const blob = new Blob([text], {type:'text/plain'});
     await storeCapture('network', blob, {ip, speed, latency});
-    log('Network check done');
   };
 }
 
 /* ============================================================
-   FEATURE 13: SCREEN SHARE
+   SCREEN SHARE (desktop only — shows notice on mobile)
    ============================================================ */
 async function renderScreenPanel(){
-  $('panelTitle').innerHTML = '🖥️ Screen Share <span>Whole screen capture</span>';
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  $('panelTitle').innerHTML = '🖥️ Screen Share <span>Desktop only</span>';
+  if(isMobile){
+    $('panelBody').innerHTML = `
+      <div class="log" style="border-left:3px solid var(--amber)">
+⚠️ Screen capture is NOT supported on mobile browsers.
+
+This is a security feature of Android Chrome and iOS Safari —
+they don't allow websites to capture the entire screen.
+
+✅ Use this feature on desktop Chrome or Firefox.
+      </div>`;
+    return;
+  }
   $('panelBody').innerHTML = `
     <video id="scrPreview" autoplay playsinline muted></video>
     <div class="btn-row">
@@ -1065,8 +1052,7 @@ async function renderScreenPanel(){
       $('scrSnap').disabled = false;
       $('scrRec').disabled = false;
       $('scrStop').disabled = false;
-      log('Screen share started');
-      stream.getVideoTracks()[0].onended = ()=>{ log('Screen share ended'); stopAllStreams(); };
+      stream.getVideoTracks()[0].onended = ()=>stopAllStreams();
     }catch(e){ toast('Screen share cancelled','red'); }
   };
   $('scrSnap').onclick = async ()=>{
@@ -1074,10 +1060,7 @@ async function renderScreenPanel(){
     const c = document.createElement('canvas');
     c.width = v.videoWidth; c.height = v.videoHeight;
     c.getContext('2d').drawImage(v,0,0);
-    c.toBlob(async b=>{
-      await storeCapture('screen', b, {});
-      toast('Snapshot saved ✓','green');
-    }, 'image/png');
+    c.toBlob(async b=>{ await storeCapture('screen', b, {}); toast('Snapshot saved ✓','green'); }, 'image/png');
   };
   $('scrRec').onclick = ()=>{
     const stream = S.streams.screen;
@@ -1089,25 +1072,19 @@ async function renderScreenPanel(){
     rec.onstop = async ()=>{
       const blob = new Blob(chunks, {type:'video/webm'});
       await storeCapture('screenrec', blob, {size:blob.size});
-      toast('Screen recording saved ✓','green');
     };
     rec.start();
     $('scrRec').disabled = true;
     $('scrStop').disabled = false;
-    log('Screen recording started');
   };
-  $('scrStop').onclick = ()=>{
-    stopRecorder('screen');
-    $('scrRec').disabled = false;
-    $('scrStop').disabled = true;
-  };
+  $('scrStop').onclick = ()=>{ stopRecorder('screen'); $('scrRec').disabled = false; $('scrStop').disabled = true; };
 }
 
 /* ============================================================
-   FEATURE 14: PLAY AUDIO (remote sound)
+   PLAY AUDIO
    ============================================================ */
 async function renderAudioPanel(){
-  $('panelTitle').innerHTML = '🔊 Play Audio <span>Emit sound from this device</span>';
+  $('panelTitle').innerHTML = '🔊 Play Audio <span>Emit sound</span>';
   $('panelBody').innerHTML = `
     <div class="input-row">
       <select id="audType">
@@ -1116,7 +1093,7 @@ async function renderAudioPanel(){
         <option value="siren">Siren</option>
         <option value="speech">Text-to-Speech</option>
       </select>
-      <input id="audText" placeholder="Text to speak (for TTS)" />
+      <input id="audText" placeholder="Text to speak" />
     </div>
     <div class="btn-row">
       <button class="btn" id="audPlay">🔊 Play</button>
@@ -1129,7 +1106,6 @@ async function renderAudioPanel(){
     $('audStop').disabled = false;
     if(type === 'speech'){
       const u = new SpeechSynthesisUtterance($('audText').value || 'Alert');
-      u.rate = 1; u.pitch = 1;
       speechSynthesis.speak(u);
       return;
     }
@@ -1147,13 +1123,9 @@ async function renderAudioPanel(){
     }
     if(type === 'alarm'){
       let t = 0;
-      const g = setInterval(()=>{
-        if(!osc) return clearInterval(g);
-        gain.gain.value = Math.abs(Math.sin(t+=0.15))*0.3;
-      }, 60);
+      setInterval(()=>{ if(osc) gain.gain.value = Math.abs(Math.sin(t+=0.15))*0.3; }, 60);
     }
     osc.start();
-    log('Audio playing: '+type);
   };
   $('audStop').onclick = ()=>{
     try{ osc && osc.stop(); }catch(e){}
@@ -1163,10 +1135,10 @@ async function renderAudioPanel(){
 }
 
 /* ============================================================
-   FEATURE 15: NOTIFY
+   NOTIFY
    ============================================================ */
 async function renderNotifyPanel(){
-  $('panelTitle').innerHTML = '🔔 Notify <span>Push a message</span>';
+  $('panelTitle').innerHTML = '🔔 Notify <span>Push message</span>';
   $('panelBody').innerHTML = `
     <div class="input-row">
       <input id="ntTitle" placeholder="Title" value="Admin Console" />
@@ -1174,62 +1146,61 @@ async function renderNotifyPanel(){
     </div>
     <div class="btn-row">
       <button class="btn" id="ntPerm">🔑 Request Permission</button>
-      <button class="btn green" id="ntSend">🔔 Send Notification</button>
+      <button class="btn green" id="ntSend">🔔 Send</button>
     </div>
+    <div id="ntStatus" style="font-size:.85rem;color:var(--muted);margin-top:10px"></div>
   `;
+  const status = $('ntStatus');
+  status.textContent = 'Permission: ' + (typeof Notification !== 'undefined' ? Notification.permission : 'unsupported');
   $('ntPerm').onclick = async ()=>{
+    if(typeof Notification === 'undefined') return toast('Not supported','red');
     const p = await Notification.requestPermission();
+    status.textContent = 'Permission: ' + p;
     toast('Permission: '+p, p==='granted'?'green':'red');
-    log('Notification permission: '+p);
   };
   $('ntSend').onclick = async ()=>{
-    if(Notification.permission !== 'granted'){
+    if(typeof Notification === 'undefined' || Notification.permission !== 'granted'){
       return toast('Enable permission first','red');
     }
     new Notification($('ntTitle').value, {body: $('ntBody').value});
-    log('Notification sent');
   };
 }
 
 /* ============================================================
-   FEATURE 16: VIBRATE
+   VIBRATE
    ============================================================ */
 async function renderVibratePanel(){
   $('panelTitle').innerHTML = '📳 Vibrate <span>Device buzz</span>';
   $('panelBody').innerHTML = `
     <div class="input-row">
-      <input id="vbPattern" value="200,100,200,100,400" placeholder="ms,ms,..." />
+      <input id="vbPattern" value="200,100,200,100,400" />
     </div>
     <div class="btn-row">
       <button class="btn" id="vbGo">📳 Vibrate</button>
       <button class="btn ghost" id="vbLong">Long Buzz</button>
     </div>
-    <div style="font-size:.75rem;color:var(--muted);margin-top:10px">
-      Only works on supported mobile browsers (Android Chrome, etc.)
-    </div>
+    <p style="color:var(--muted);font-size:.75rem;margin-top:10px">Works on Android Chrome. Not on iOS.</p>
   `;
   $('vbGo').onclick = ()=>{
     const pat = $('vbPattern').value.split(',').map(n=>+n).filter(n=>!isNaN(n));
-    if(navigator.vibrate){ navigator.vibrate(pat); log('Vibrate: '+pat.join(',')); }
+    if(navigator.vibrate){ navigator.vibrate(pat); toast('Buzz!','green'); }
     else toast('Vibration unsupported','red');
   };
-  $('vbLong').onclick = ()=>{
-    if(navigator.vibrate){ navigator.vibrate(1500); log('Long vibrate'); }
-  };
+  $('vbLong').onclick = ()=>{ if(navigator.vibrate) navigator.vibrate(1500); };
 }
 
 /* ============================================================
-   FEATURE 17: FLASHLIGHT / TORCH
+   FLASHLIGHT
    ============================================================ */
 async function renderFlashPanel(){
   $('panelTitle').innerHTML = '🔦 Flashlight <span>Torch on/off</span>';
   $('panelBody').innerHTML = `
     <div class="btn-row">
-      <button class="btn green" id="flOn">🔦 Torch ON</button>
-      <button class="btn red" id="flOff">⏹ Torch OFF</button>
+      <button class="btn green" id="flOn">🔦 ON</button>
+      <button class="btn red" id="flOff">⏹ OFF</button>
     </div>
     <p style="color:var(--muted);font-size:.75rem;margin-top:12px">
-      Requires a camera that supports torch mode (most Android Chrome browsers do; iOS Safari does not).
+      Requires torch support. Many Android phones work; iOS Safari does not.
     </p>
   `;
   $('flOn').onclick = async ()=>{
@@ -1238,78 +1209,50 @@ async function renderFlashPanel(){
       const track = stream.getVideoTracks()[0];
       await track.applyConstraints({advanced:[{torch:true}]});
       S.streams.cam = stream;
-      S.torchOn = true;
       setCamStatus(true);
-      log('Torch ON');
       toast('Torch on 🔦','green');
-    }catch(e){
-      log('Torch failed: '+e.message,'error');
-      toast('Torch not supported here','red');
-    }
+    }catch(e){ toast('Torch not supported here','red'); log('Torch failed: '+e.message,'error'); }
   };
   $('flOff').onclick = ()=>{
     if(S.streams.cam){ S.streams.cam.getTracks().forEach(t=>t.stop()); S.streams.cam=null; }
-    S.torchOn = false;
     setCamStatus(false);
-    log('Torch OFF');
   };
 }
 
 /* ============================================================
-   FEATURE 18: RECORD ALL (screen + cam + mic combined)
+   SCREAM SCREEN — bright white + loud alarm
    ============================================================ */
-async function renderRecordAllPanel(){
-  $('panelTitle').innerHTML = '⚡ Record All <span>Screen + camera + mic together</span>';
+async function renderScreamPanel(){
+  $('panelTitle').innerHTML = '🚨 Scream Screen <span>Bright + sound</span>';
   $('panelBody').innerHTML = `
     <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">
-      Starts a combined capture: your screen (with system audio if allowed) + your microphone.
-      You can also preview your camera at the same time.
+      Flashes the screen bright white and plays a loud alarm. Useful for lost-phone situations.
     </p>
-    <video id="raCam" autoplay playsinline muted style="margin-bottom:10px"></video>
     <div class="btn-row">
-      <button class="btn green" id="raStart">⚡ Start Full Capture</button>
-      <button class="btn red" id="raStop" disabled>⏹ Stop & Save</button>
+      <button class="btn red" id="scGo">🚨 SCREAM (10s)</button>
     </div>
-    <div id="raStatus" style="font-size:.8rem;color:var(--muted);margin-top:10px"></div>
   `;
-  $('raStart').onclick = async ()=>{
+  $('scGo').onclick = ()=>{
+    let flashes = 0;
+    const interval = setInterval(()=>{
+      document.body.style.background = flashes%2 ? 'var(--bg)' : '#fff';
+      flashes++;
+      if(flashes > 20){ clearInterval(interval); document.body.style.background = 'var(--bg)'; }
+    }, 250);
     try{
-      // 1) get display (screen)
-      const screen = await navigator.mediaDevices.getDisplayMedia({video:true, audio:true});
-      // 2) get camera + mic
-      const cam = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
-      S.streams.screen = screen;
-      S.streams.cam = cam;
-      $('raCam').srcObject = cam;
-      setCamStatus(true); setMicStatus(true);
-      $('raStatus').textContent = 'Recording screen + mic…';
-
-      // record screen stream
-      const rec = new MediaRecorder(screen, {mimeType:'video/webm'});
-      S.recorders.all = rec;
-      const chunks = [];
-      rec.ondataavailable = e=>e.data.size && chunks.push(e.data);
-      rec.onstop = async ()=>{
-        const blob = new Blob(chunks, {type:'video/webm'});
-        await storeCapture('fullrec', blob, {size:blob.size});
-        toast('Full capture saved ✓','green');
-        setCamStatus(false); setMicStatus(false);
-        $('raStatus').textContent = 'Saved.';
-      };
-      rec.start();
-      $('raStart').disabled = true;
-      $('raStop').disabled = false;
-      log('Full capture started');
-    }catch(e){
-      log('Full capture failed: '+e.message,'error');
-      toast('Permission denied','red');
-    }
-  };
-  $('raStop').onclick = ()=>{
-    stopRecorder('all');
-    if(S.streams.cam) S.streams.cam.getTracks().forEach(t=>t.stop());
-    $('raStart').disabled = false;
-    $('raStop').disabled = true;
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'square';
+      osc.frequency.value = 1000;
+      gain.gain.value = 0.3;
+      osc.start();
+      let t = 0;
+      const sweep = setInterval(()=>{ osc.frequency.value = 800 + 400*Math.sin(t+=0.3); }, 30);
+      setTimeout(()=>{ osc.stop(); clearInterval(sweep); }, 10000);
+    }catch(e){}
+    toast('🚨 SCREAMING','red');
   };
 }
 
@@ -1320,14 +1263,16 @@ async function refreshMediaLibrary(){
   const all = await dbAll();
   const grid = $('mediaGrid');
   if(!all.length){
-    grid.innerHTML = '<div class="empty">No captures yet. Use a feature above.</div>';
+    grid.innerHTML = '<div class="empty">No captures yet.</div>';
     return;
   }
   grid.innerHTML = all.slice().reverse().map(item=>{
     let preview = '';
     if(item.dataUrl){
-      if(item.type==='audio'){
-        preview = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:2rem">🎵</div>`;
+      if(item.type==='audio' || item.type==='location' || item.type==='track'
+        || item.type==='device' || item.type==='network' || item.type==='clipboard'){
+        const icon = {audio:'🎵',location:'📍',track:'🛰️',device:'📱',network:'🌐',clipboard:'📋'}[item.type] || '📄';
+        preview = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:2rem">${icon}</div>`;
       } else if(item.type==='video' || item.type==='screenrec' || item.type==='fullrec'){
         preview = `<video src="${item.dataUrl}" muted></video>`;
       } else {
@@ -1348,16 +1293,13 @@ async function delMedia(id){
   if(!confirm('Delete this item?')) return;
   await dbDelete(id);
   refreshMediaLibrary(); updateStorageCount();
-  log('Deleted item '+id);
 }
-
 async function clearAllMedia(){
-  if(!confirm('Delete ALL captured media? This cannot be undone.')) return;
+  if(!confirm('Delete ALL captured media?')) return;
   await dbClear();
   refreshMediaLibrary(); updateStorageCount();
   log('All media cleared','warn');
 }
-
 async function openMedia(id){
   const all = await dbAll();
   const item = all.find(x=>x.id===id);
@@ -1370,7 +1312,6 @@ async function openMedia(id){
   } else if(item.dataUrl && item.dataUrl.startsWith('data:image')){
     w.document.write(`<title>${item.type}</title><img src="${item.dataUrl}" style="max-width:100%">`);
   } else {
-    // JSON / text
     const txt = await (await fetch(item.dataUrl)).text();
     w.document.write(`<title>${item.type}</title><pre style="padding:20px;white-space:pre-wrap">${escapeHtml(txt)}</pre>`);
   }
@@ -1386,23 +1327,12 @@ function downloadBlob(blob, filename){
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
 }
-
 async function exportAll(){
   const all = await dbAll();
-  const data = {
-    exported: new Date().toISOString(),
-    userAgent: navigator.userAgent,
-    count: all.length,
-    items: all.map(i=>({
-      id:i.id, type:i.type, ts:i.ts, meta:i.meta,
-      dataUrl: i.dataUrl  // includes full base64 for small items
-    }))
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  downloadBlob(blob, `admin_export_${Date.now()}.json`);
+  const data = { exported: new Date().toISOString(), userAgent: navigator.userAgent, count: all.length, items: all };
+  downloadBlob(new Blob([JSON.stringify(data, null, 2)], {type:'application/json'}), `admin_export_${Date.now()}.json`);
   toast('Exported ✓','green');
 }
-
 async function downloadAllMedia(){
   const all = await dbAll();
   if(!all.length) return toast('Nothing to download','red');
@@ -1413,24 +1343,21 @@ async function downloadAllMedia(){
       const ext = item.dataUrl.startsWith('data:image/png') ? 'png'
         : item.dataUrl.startsWith('data:image/jpeg') ? 'jpg'
         : item.dataUrl.startsWith('data:audio') ? 'webm'
-        : item.dataUrl.startsWith('data:video') ? 'webm'
-        : 'bin';
+        : item.dataUrl.startsWith('data:video') ? 'webm' : 'bin';
       downloadBlob(blob, `${item.type}_${item.ts}.${ext}`);
       await new Promise(r=>setTimeout(r,200));
-    }catch(e){ log('Download failed for '+item.id,'error'); }
+    }catch(e){}
   }
 }
 
 /* ============================================================
-   REMOTE SYNC (optional)
+   REMOTE SYNC
    ============================================================ */
 function saveSyncUrl(){
   S.syncUrl = $('syncUrl').value.trim();
   localStorage.setItem('ac_syncUrl', S.syncUrl);
   toast(S.syncUrl ? 'Sync URL saved' : 'Sync URL cleared', 'green');
-  log('Sync URL: '+(S.syncUrl||'(none)'));
 }
-
 async function syncPending(){
   if(!S.syncUrl) return toast('Set a sync URL first','red');
   setSyncStatus('syncing…', 'rec');
@@ -1444,22 +1371,43 @@ async function syncPending(){
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({type:item.type, ts:item.ts, meta:item.meta, dataUrl:item.dataUrl})
       });
-      if(res.ok){ item.synced = true; ok++; }
-      else fail++;
+      if(res.ok){ item.synced = true; ok++; } else fail++;
     }catch(e){ fail++; }
   }
   setSyncStatus('idle','on');
   toast(`Synced ${ok}, failed ${fail}`, fail?'red':'green');
-  log(`Sync complete: ${ok} ok / ${fail} failed`);
 }
-
 async function testSync(){
   if(!S.syncUrl) return toast('Set a sync URL first','red');
   try{
     const res = await fetch(S.syncUrl, {method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({test:true, ts:Date.now()})});
-    toast(res.ok ? 'Endpoint OK ✓' : 'Endpoint error: '+res.status, res.ok?'green':'red');
+    toast(res.ok ? 'Endpoint OK ✓' : 'Error: '+res.status, res.ok?'green':'red');
   }catch(e){ toast('Endpoint unreachable','red'); }
+}
+
+/* ============================================================
+   PWA INSTALL
+   ============================================================ */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  $('installBtn').style.display = 'block';
+});
+$('installBtn').addEventListener('click', async () => {
+  if(!deferredPrompt){
+    toast('Use browser menu → "Add to Home Screen"', 'red');
+    return;
+  }
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  toast(outcome === 'accepted' ? 'Installed ✓' : 'Cancelled', outcome === 'accepted' ? 'green' : '');
+  deferredPrompt = null;
+  $('installBtn').style.display = 'none';
+});
+if(window.matchMedia('(display-mode: standalone)').matches){
+  $('installBtn').style.display = 'none';
 }
 
 /* ============================================================
@@ -1472,8 +1420,6 @@ async function init(){
     await updateStorageCount();
     $('syncUrl').value = S.syncUrl;
     log('Admin Console initialized');
-    log('Tip: use Screen Share (🖥️) for real screenshots of other apps');
-    // online/offline
     window.addEventListener('online', ()=>{ $('netStatus').textContent='online'; $('ledNet').className='led on'; });
     window.addEventListener('offline', ()=>{ $('netStatus').textContent='offline'; $('ledNet').className='led'; });
     $('ledNet').className = navigator.onLine ? 'led on' : 'led';
@@ -1483,14 +1429,8 @@ async function init(){
   }
 }
 
-// Keyboard: ESC to lock
 document.addEventListener('keydown', e=>{
   if(e.key === 'Escape' && S.unlocked){ lockApp(); }
-});
-
-// prevent accidental context menu in admin
-document.addEventListener('contextmenu', e=>{
-  if(S.unlocked) e.preventDefault();
 });
 
 console.log('%c🔐 Admin Console ready','color:#4f8cff;font-weight:bold;font-size:14px');
